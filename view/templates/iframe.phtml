@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php wp_head();?>
+    </head>
+    <body id="ve-editor-template" class="ve-editor-view">
+        <?php the_post();?>
+        <div class="ve-the-editor">
+            <ve-editor>
+                <?php the_content();?>
+            </ve-editor>
+        </div>
+        <?php wp_footer();?>
+
+    </body>
+</html>

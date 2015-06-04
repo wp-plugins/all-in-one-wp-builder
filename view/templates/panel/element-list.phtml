@@ -1,0 +1,22 @@
+<?php
+/**
+ * @var VE_Editor $editor
+ * @var VE_View_Manager $this
+ */
+
+?>
+<ul>
+    <?php
+    $elements=$editor->getAllElements();
+    foreach($elements as $e){
+        ?>
+        <li class="element-list-item" data-id-base="<?php echo $e['id_base'];?>">
+            <div class="ve-element ve_element-<?php echo $e['id_base'];?> tooltip" title="<?php echo $e['name'];?>">
+                <span class="icon"><i class="<?php echo $e['icon_class'];?>"></i></span>
+                <!--     <span class="name"><?php echo $e['name'];?></span> -->
+            </div>
+        </li>
+    <?php
+    }
+    ?>
+</ul>

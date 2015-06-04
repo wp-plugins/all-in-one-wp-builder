@@ -1,0 +1,198 @@
+.compose-mode .ve_element,
+.view-mode .ve_element {
+  display: block;
+  position: relative;
+}
+.compose-mode .ve_element .ve_empty-element,
+.view-mode .ve_element .ve_empty-element {
+  min-height: 100px;
+  cursor: pointer;
+  position: relative;
+}
+.compose-mode .ve_element .ve_empty-el,
+.view-mode .ve_element .ve_empty-el {
+  min-height: 50px;
+  cursor: pointer;
+}
+.compose-mode .ve_element .ve_cutting,
+.view-mode .ve_element .ve_cutting {
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+}
+.compose-mode .ve_element:hover .ve_element-ve_col:before,
+.view-mode .ve_element:hover .ve_element-ve_col:before,
+.compose-mode .ve_element.ve_hover .ve_element-ve_col:before,
+.view-mode .ve_element.ve_hover .ve_element-ve_col:before,
+.ve_sorting .compose-mode .ve_element .ve_element-ve_col:before,
+.ve_sorting .view-mode .ve_element .ve_element-ve_col:before {
+  outline: 1px dashed #ebebeb;
+}
+.ve_sorting .compose-mode .ve_element .ve_element-ve_col .ui-sortable,
+.ve_sorting .view-mode .ve_element .ve_element-ve_col .ui-sortable {
+  min-height: 100px;
+}
+.compose-mode .ve_element-ve_row,
+.view-mode .ve_element-ve_row {
+  margin-bottom: 20px;
+}
+.compose-mode .ve_element-ve_row:hover .ve_row,
+.view-mode .ve_element-ve_row:hover .ve_row {
+  outline: 1px dashed #00c800 !important;
+}
+.compose-mode .ve_element-ve_row:hover .ve_controls,
+.view-mode .ve_element-ve_row:hover .ve_controls {
+  display: inline-block;
+}
+.compose-mode .ve_element-ve_row > .ve_controls,
+.view-mode .ve_element-ve_row > .ve_controls {
+  right: auto;
+  left: -15px;
+  top: auto;
+  bottom: -20px;
+  margin: 0px;
+}
+.compose-mode .ve_element-ve_row .ve_element-ve_col > .ve_controls,
+.view-mode .ve_element-ve_row .ve_element-ve_col > .ve_controls {
+  right: 0;
+  left: auto;
+  margin: 0px;
+  top: -20px;
+}
+.compose-mode .ve_controls,
+.view-mode .ve_controls {
+  font-family: "Open Sans", Helvetica, sans-serif;
+  height: 20px;
+  z-index: 1004;
+  display: none;
+  visibility: visible;
+  font-size: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -25px;
+  margin-top: -15px;
+  color: #fff;
+}
+.compose-mode .ve_controls .inner,
+.view-mode .ve_controls .inner {
+  display: inline-block;
+  background: rgba(0, 200, 0, 0.4);
+}
+.compose-mode .ve_controls .inner:hover,
+.view-mode .ve_controls .inner:hover {
+  background: #00c800;
+}
+.compose-mode .ve_controls .control-clear,
+.view-mode .ve_controls .control-clear {
+  clear: both;
+  float: none;
+  padding: 0;
+  margin: 0;
+}
+.compose-mode .ve_controls .control-item,
+.view-mode .ve_controls .control-item {
+  display: inline-block;
+  padding: 0 4px;
+  line-height: 20px;
+  height: 20px;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
+  float: left;
+}
+.compose-mode .ve_selected.ve_element-ve_row .ve_row,
+.view-mode .ve_selected.ve_element-ve_row .ve_row {
+  box-shadow: inset 0px 0px 0 2000px rgba(0, 0, 0, 0.1);
+}
+.compose-mode .ve_selected.ve_element-ve_col,
+.view-mode .ve_selected.ve_element-ve_col {
+  outline: 1px dashed red !important;
+}
+.compose-mode .ve_selected.ve-el,
+.view-mode .ve_selected.ve-el {
+  outline: 1px dashed red !important;
+}
+.compose-mode #ve_no_content_helper,
+.view-mode #ve_no_content_helper {
+  text-align: center;
+}
+.compose-mode #ve_no_content_helper .ve_buttons,
+.view-mode #ve_no_content_helper .ve_buttons {
+  margin-top: 60px;
+  border: 1px dashed rgba(125, 125, 125, 0.4);
+  padding: 12px 10px 5px;
+  height: 50px;
+}
+.compose-mode #ve_no_content_helper .ve_buttons .ve_add_element_btn,
+.view-mode #ve_no_content_helper .ve_buttons .ve_add_element_btn {
+  height: 40px;
+}
+.compose-mode .ve_helper,
+.view-mode .ve_helper {
+  width: auto !important;
+  height: auto !important;
+  box-sizing: border-box;
+  z-index: 1006;
+  position: absolute;
+  padding: 4px 15px 4px 30px;
+  border: 1px solid #afd23e;
+  vertical-align: middle;
+  color: #0e013b;
+  font-size: 24px;
+  background: #003399;
+}
+.compose-mode .ve_placeholder-element,
+.view-mode .ve_placeholder-element {
+  max-height: 100px;
+}
+.compose-mode .ve_placeholder-row,
+.view-mode .ve_placeholder-row,
+.compose-mode .ve_helper-ve_row,
+.view-mode .ve_helper-ve_row {
+  background: #fecac2;
+}
+.compose-mode .ve_placeholder-element,
+.view-mode .ve_placeholder-element,
+.compose-mode .ve_helper-ve_text,
+.view-mode .ve_helper-ve_text {
+  background: #c1e2b3;
+}
+.compose-mode .ve_placeholder-col,
+.view-mode .ve_placeholder-col,
+.compose-mode .ve_helper-ve_col,
+.view-mode .ve_helper-ve_col {
+  background: #ffec8b;
+}
+.view-mode {
+  /**
+ * Created by Alt on 5/19/2015.
+ */
+}
+.view-mode .ve-el {
+  outline: 1px dashed #F00 !important;
+}
+.ve_row.ve_row-no-padding .ve_element-ve_col {
+  padding-left: 0;
+  padding-right: 0;
+}
+body#ve-editor-template {
+  width: 100%;
+  background: #FFF;
+  overflow-x: hidden;
+}
+body#ve-editor-template:before,
+body#ve-editor-template:after {
+  width: auto;
+}
+body#ve-editor-template .ve-the-editor {
+  padding: 40px;
+}
+.ve-editor-view {
+  width: 970px;
+  border: 1px solid #9E9E9E;
+  left: 37px !important;
+  margin: auto;
+}
+.ve-editor-view h1 {
+  margin-bottom: 30px;
+}

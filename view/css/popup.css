@@ -1,0 +1,57 @@
+.ve-popup {
+  position: fixed;
+  width: 100%;
+  z-index: 100000;
+  background: #ffffff;
+  -webkit-box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.75);
+  border-radius: 4px;
+}
+.ve-popup.ve_popup_center {
+  top: 50%;
+  left: 50%;
+}
+.ve-popup.ve_popup_top-left {
+  top: 10px;
+  left: 10px;
+}
+.ve-popup.ve_popup_top-right {
+  top: 10px;
+  right: 10px;
+}
+.ve-popup.ve_popup_bottom-left {
+  bottom: 10px;
+  left: 10px;
+}
+.ve-popup.ve_popup_bottom-right {
+  bottom: 10px;
+  right: 10px;
+}
+.ve-popup .popup-header {
+  padding: 15px;
+  background: #91c46b;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.ve-popup .popup-header .popup-title {
+  margin: 0 0 0 10px;
+  color: #ffffff;
+}
+.ve-popup .popup-content {
+  padding: 0 15px;
+}
+.ve-popup .close-icon {
+  color: #fff;
+  height: 29px;
+  line-height: 29px;
+  position: absolute;
+  right: 10px;
+  text-align: center;
+  top: 10px;
+  width: 29px;
+}
+.ve-popup .close-icon:before {
+  content: "";
+  font: 20px/29px "FontAwesome";
+}

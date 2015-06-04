@@ -1,0 +1,54 @@
+<?php
+/**
+ * @var VE_Editor $editor
+ * @var VE_View_Manager $this
+ */
+
+?>
+<a href="#TB_inline?width=600&height=550&inlineId=ve-page-settings" title="Page Settings" class="thickbox">Page Setting</a>
+<div id="ve-page-settings" class="hidden">
+    <form class="ve-ajax-form ui-tabs" data-update-values="1" action="">
+        <ul role="tablist" class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+            <li aria-expanded="true" aria-selected="true" aria-labelledby="ui-id-7" aria-controls="ve-element-primary-feature" tabindex="0" role="tab" class="ui-state-default ui-corner-top ui-tabs-active ui-state-active"><a id="ui-id-7" tabindex="-1" role="presentation" class="ui-tabs-anchor" href="#ve-element-primary-feature">Setting</a></li>
+        </ul>
+        <input type="hidden" name="action" value="ve_update_post"/>
+        <div class="ui-tabs-panel">
+        <p>
+            <label for="ve_post_title">Title:</label>
+            <input class="widefat" id="ve_post_title" type="text" name="post_title" value="<?php echo esc_attr($editor->post->post_title);?>"/>
+        </p>
+        <p>
+            <label for="ve_post_slug">Slug:</label>
+            <input class="widefat" id="ve_post_slug" type="text" name="post_name" value="<?php echo esc_attr($editor->post->post_name);?>"/>
+        </p>
+        <p>
+            <label for="ve_post_slug">Meta Description:</label>
+            <br />
+            <textarea class="widefat" name="metas[post_description]"><?php echo @esc_attr($editor->post->metas['post_description']);?></textarea>
+        </p>
+        <p>
+            <label for="ve_post_slug">Meta tags:</label>
+            <br />
+            <textarea class="widefat" name="metas[post_tags]"><?php echo @esc_attr($editor->post->metas['post_tags']);?></textarea>
+        </p>
+        <?php if($editor->getPost()->post_type=='page'&&ve_get_page_templates()){
+            $template = get_post_meta( $editor->getPost()->ID, '_wp_page_template', true );
+            ?>
+            <!--
+                        <p>
+                            <label for="ve_page_template">Page Template:</label>
+                            <select name="page_template">
+                                <option value="full-width.php">Default</option>
+                                <?php ve_page_template_dropdown($template);?>
+                            </select>
+                        </p>
+                        -->
+        <?php }?>
+        </div>
+        <p class="form-control submit">
+            <input type="submit" value="Update" class="save"/>
+        </p>
+
+    </form>
+    <div class="ve_clearfix"></div>
+</div>

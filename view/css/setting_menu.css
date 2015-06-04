@@ -1,0 +1,19 @@
+.ve-form-wrapper input, .ve-form-wrapper select {
+    outline: none;
+    border-radius: 4px;
+    border: 1px solid #9cc228;
+}
+
+.ve-form-wrapper input:focus {
+    outline: none;
+}
+
+.ve-form-wrapper label {
+    color: #444;
+    font-style: italic;
+    display: inline-block;
+}
+
+.ve-form-wrapper label:after {
+    content:":";
+}

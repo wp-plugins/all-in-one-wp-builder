@@ -1,0 +1,53 @@
+<?php
+/**
+ * @var VE_Editor $editor
+ * @var VE_View_Manager $this
+ */
+
+?><div id="ve-panel" class="<?php echo $editor->getPostType();?>">
+
+    <div class="panel-wrapper">
+
+        <div class="ve-form-wrapper">
+            <div class="form-header">
+                <h3 class="form-title"></h3>
+                <a href="#" class="close-element-form"><i class="form-close-icon"></i></a>
+            </div>
+            <form id="ve-element-form" class="ve-form">
+                <div class="form-content">
+
+                </div>
+                <div class="form-control">
+                    <input type="submit" value="Apply" class="save"/>
+                </div>
+            </form>
+            <div class="loading-indicator">
+                <div class="loading-inner">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-items">
+            <div class="panel-item">
+                <?php
+                //
+
+                ?>
+
+            </div>
+            <div id="panel-item-1" class="panel-item element-list">
+                <?php $this->render('panel/element-list');?>
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+
+    </div>
+</div>
+<a class="closePopup close-element-form" href="#"></a>

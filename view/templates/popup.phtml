@@ -1,0 +1,51 @@
+<?php
+/**
+ * @var $popup WP_Post
+ * @var array $args
+ */
+$title=$popup->post_title;
+$id=$popup->ID;
+$title=apply_filters( 'the_title', $title, $id );
+$content=$popup->post_content;
+remove_filter('the_content',array($editor,'addContentAnchor'));
+$content = apply_filters( 'the_content', $content );
+$content = str_replace( ']]>', ']]&gt;', $content );
+$popupData=array(
+    'position'=>$popup->position,
+    'appearance'=>$popup->appearance,
+    'placement'=>$popup->placement,
+    'popup_category'=>$popup->popup_category,
+    'popup_post'=>$popup->popup_post,
+    'popup_page'=>$popup->popup_page,
+    'offset'=>array(
+        'top'=>$popup->top,
+        'left'=>$popup->left,
+        'right'=>$popup->right,
+        'bottom'=>$popup->bottom,
+    ),
+    'size'=>array(
+        'width'=>$popup->width,
+        'height'=>$popup->height,
+    ),
+    'open'=>$popup->open,
+    'delay'=>$popup->delay,
+
+);
+$screen_width=ve_get_post_meta('screen_size',$popup->ID);
+$screen_width = intval($screen_width) - 82;
+$popupData['size']['width']=$screen_width;
+if(!is_array($args)){
+    $args=array();
+}
+$popupData=array_merge($popupData,$args);
+?>
+<div class="ve-popup ve-hide" style="display: none;" id="ve-popup-<?php echo $id;?>" data-popup-id="<?php echo $id;?>" data-popup=<?php echo json_encode($popupData);?>>
+    <div class="ve-popup-wrapper">
+        <div class="popup-header">
+            <h2 class="popup-title"><?php echo $title;?></h2>
+            <a href="#" data-ve-prevent="1" class="close-popup"><i class="close-icon"></i></a>
+        </div>
+
+        <div class="popup-content"><?php echo $content;?></div>
+    </div>
+</div>

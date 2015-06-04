@@ -1,0 +1,39 @@
+<?php
+/**
+ * @var VE_Editor $editor
+ * @var VE_View_Manager $this
+ */
+
+?>
+<a href="#TB_inline?width=600&height=550&inlineId=ve-popup-listing" title="Popups" class="thickbox">Popups</a>
+<div id="ve-popup-listing" class="hidden">
+    <form class="ui-tabs" action="">
+        <ul role="tablist" class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+            <li aria-expanded="true" aria-selected="true" aria-labelledby="ui-id-7" aria-controls="ve-element-primary-feature" tabindex="0" role="tab" class="ui-state-default ui-corner-top ui-tabs-active ui-state-active"><a id="ui-id-7" tabindex="-1" role="presentation" class="ui-tabs-anchor" href="#ve-element-primary-feature">Pages</a></li>
+        </ul>
+        <div class="ui-tabs-panel">
+
+            <?php
+            $pages = get_posts(array(
+                'post_type' => 've-popup',
+                'posts_per_page' => -1,
+                'meta_key' => '_use_ve',
+                'meta_value' => '1',
+                'post_status' => array('publish','draft')));
+            foreach($pages as $p)
+            {
+                $draf = "";
+                if ($p->post_status == "draft")
+                {
+                    $draf = " <b>(Draft)</b>";
+                }
+                ?>
+                <p><a href="<?php echo $editor->getEditUrl($p->ID)?>"><?php echo get_the_title($p->ID);?></a><?php echo $draf;?></p>
+            <?php
+            }
+            ?>
+        </div>
+
+    </form>
+    <div class="ve_clearfix"></div>
+</div>

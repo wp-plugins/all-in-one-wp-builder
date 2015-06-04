@@ -1,0 +1,56 @@
+<?php
+global $menu, $submenu, $parent_file, $post_ID, $post,$hook_suffix,$post_type;
+$hook_suffix='edit-visual';
+/**
+ * @var VE_Editor $editor
+ */
+$post_ID = $editor->post_id;
+$post = $editor->post;
+$post_type = $editor->post->post_type;
+$nonce_action = $nonce_action = 'update-post_' . $editor->post_id;
+$user_ID = isset($editor->current_user) && isset($editor->current_user->ID) ? (int) $editor->current_user->ID : 0;
+$form_action = 'editpost';
+$menu = array();
+add_thickbox();
+wp_enqueue_media( array( 'post' => $post_ID ) );
+require_once( $editor->adminFile('admin-header.php') );
+?>
+
+    <?php $this->render('topbar.phtml');?>
+    <div id="ve_inline-frame-wrapper" style="">
+        <iframe src="<?php echo esc_attr( $editor->edit_iframe_url ) ?>" scrolling="auto" style="width: 100%;"
+                id="ve_inline-frame"></iframe>
+    </div>
+    <div data-type="text/html" id="ve_template-post-content" style="display: none;">
+
+        <?php $editor->getContentToEdit() ?>
+        <?php $this->render('no-content-helper');?>
+
+    </div>
+    <script>
+        window.ve_post_elements=<?php echo json_encode($editor->post_elements);?>;
+        window.ve_elements=<?php echo json_encode($editor->getAllElements());?>;
+        window.ve_post=<?php echo json_encode($editor->getPostInfo());?>;
+        window.ve_settings=<?php echo json_encode(get_user_meta(get_current_user_id(), 've_settings', true ));?>;
+        window.ve_post_settings=<?php echo json_encode(get_post_meta($post_ID,'ve_settings',true))?>;
+        window.ve_elements_script=<?php echo json_encode($editor->get_element_scripts());?>;
+    </script>
+    <?php $this->render('panel.phtml');?>
+
+    <div style="height: 1px; visibility: hidden; overflow: hidden;">
+        <?php $this->render('controls.phtml');?>
+    </div>
+    <?php $this->render('block-templates.phtml')?>
+
+    <div style="height: 1px; visibility: hidden; overflow: hidden;">
+        <?php //wp_editor('blah','aaa');?>
+        <?php
+        // fix missed meta boxes see: #1252
+        require_once ABSPATH.'wp-admin/edit-form-advanced.php';
+        // Fix: WP 4.0
+        wp_dequeue_script('editor-expand');
+
+        ?>
+
+    </div>
+<?php require_once( $editor->adminFile('admin-footer.php') ); ?>

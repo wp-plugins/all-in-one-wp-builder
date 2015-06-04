@@ -1,0 +1,36 @@
+<?php
+/**
+ * @var $this Ve_Element
+ * @var $atts,$content,$args
+ */
+?>
+<div class="element-form-tabs">
+    <ul>
+        <li><a href="#ve-element-primary-feature"><?php echo $this->feature_default_title;?></a></li>
+        <?php foreach($this->features as $feature){
+        ?>
+        <li><a href="#<?php echo $feature->getId();?>"><?php echo $feature->getTitle();?></a></li>
+        <?php }?>
+    </ul>
+    <div id="ve-element-primary-feature">
+        <?php $this->_form($atts,$content,$args);?>
+
+    </div>
+    <?php foreach($this->features as $feature){
+    ?>
+    <div id="<?php echo $feature->getId();?>">
+        <?php
+            echo call_user_func($feature->_get_callback(),$atts,$content,$this);
+        ?>
+    </div>
+    <?php }?>
+
+</div>
+<?php if($this->previewEnable){?>
+    <div id="ve-preview">
+        <h3 class="preview-head">Preview</h3>
+        <div class="preview-content">
+            <div class="ve_element_preview"></div>
+        </div>
+    </div>
+<?php }?>

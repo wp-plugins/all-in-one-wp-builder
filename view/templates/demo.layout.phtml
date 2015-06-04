@@ -1,0 +1,28 @@
+<div id="ve_layout">
+    <div class="row">
+        <div class="col col-md-4">col 1</div>
+        <div class="col col-md-1">col 2</div>
+        <div class="col col-md-7">col 3</div>
+    </div>
+    <div class="row">
+        <div class="col col-md-4">col</div>
+        <div class="col col-md-8"></div>
+    </div>
+</div>
+
+<?php wp_editor('abc','editor1');?>
+<script>
+    jQuery(function(){
+        $=jQuery;
+        $(".row").resizableColumns({
+            store: window.store
+        });
+
+        $(".row").sortable({
+            connectWith: '.row'
+        });
+
+
+
+    });
+</script>

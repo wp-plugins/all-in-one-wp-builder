@@ -1,0 +1,111 @@
+<?php
+/**
+ * @var VE_Editor $editor
+ * @var VE_View_Manager $this
+ */
+$post=$editor->getPost();
+
+$positionOptions=array(
+    'top'=>'Top of page',
+    'bottom'=>'Bottom',
+    'after'=>'After x paragraph',
+);
+$appearanceOptions=array(
+    ''=>'Default',
+    'left'=>'Left',
+    'right'=>'Right',
+    'center'=>'Center',
+);
+$placementOptions=array(
+    ''=>'None',
+    'post'=>'All posts',
+    'page'=>'All pages',
+    'category'=>'By Category',
+
+);
+
+?>
+<a href="#TB_inline?width=600&height=550&inlineId=ve-widget-settings" title="Widget Settings" class="thickbox">Widget Setting</a>
+<div id="ve-widget-settings" class="hidden">
+    <form class="ve-ajax-form ve-widget-settings ui-tabs" data-update-values="1">
+        <input type="hidden" name="action" value="ve_update_post_meta"/>
+        <ul role="tablist" class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+            <li aria-expanded="true" aria-selected="true" aria-labelledby="ui-id-7" aria-controls="ve-element-primary-feature" tabindex="0" role="tab" class="ui-state-default ui-corner-top ui-tabs-active ui-state-active"><a id="ui-id-7" tabindex="-1" role="presentation" class="ui-tabs-anchor" href="#ve-element-primary-feature">Setting</a></li>
+        </ul>
+        <div class="ui-tabs-panel">
+            <p>
+                <label for="ve_post_title">Widget Title:</label>
+                <input class="widefat" id="ve_post_title" type="text" name="post_title" value="<?php echo esc_attr($editor->post->post_title);?>"/>
+            </p>
+        <p class="ve_row">
+            <label for="position" class="ve_col-sm-3">Widget Position:</label>
+            <select name="position" id="position" class="ve_col-sm-3">
+                <?php foreach($positionOptions as $value=>$title){
+                    printf('<option value="%s"%s>%s</option>',$value,selected($value,$post->position,false),$title);
+                }?>
+            </select>
+
+        </p>
+
+        <div class="ve_row" data-show-if="position" data-show-value="after">
+            <div class="ve_col-sm-3">
+                <label for="widget_after">After paragraph:</label><br>
+
+            </div>
+            <div class="ve_col-sm-6">
+                <input type="number" name="widget_after" id="widget_after">
+            </div>
+        </div>
+
+        <p class="ve_row">
+            <label for="alignment" class="ve_col-sm-3">Widget Alignment:</label>
+            <select name="alignment" id="alignment" class="ve_col-sm-3">
+                <?php foreach($appearanceOptions as $value=>$title){
+                    printf('<option value="%s"%s>%s</option>',$value,selected($value,$post->appearance,false),$title);
+                }?>
+            </select>
+
+        </p>
+
+        <p  class="ve_row">
+            <label for="placement" class="ve_col-sm-3">Placement:</label>
+            <select name="placement" id="placement" class="ve_col-sm-3">
+                <?php foreach($placementOptions as $value=>$title){
+                    printf('<option value="%s"%s>%s</option>',$value,selected($value,$post->placement,false),$title);
+                }?>
+            </select>
+
+        </p>
+
+        <div class="ve_row" data-show-if="placement" data-show-value="category">
+            <div class="ve_col-sm-12">
+                <label for="widget_category">Category:</label><br>
+                <select id="widget_category" multiple="multiple" name="widget_category[]">
+                    <?php
+                    $categories=get_categories();
+                    foreach($categories as $category){
+                        printf('<option value="%s"%s>%s</option>',$category->term_id,selected(in_array($category->term_id,(array)$post->widget_category),true,false),$category->cat_name.' ('.$category->category_count.')');
+                    }
+                    ?>
+                </select>
+                <script type="text/javascript">
+                    jQuery("#widget_category").select2({
+                        width:"360"
+
+                    });
+                </script>
+            </div>
+        </div>
+
+
+
+        <span class="clearfix"></span>
+
+        </div>
+        <span class="clearfix"></span>
+
+        <p class="form-control submit">
+            <input type="submit" value="Update" class="save"/>
+        </p>
+    </form>
+</div>

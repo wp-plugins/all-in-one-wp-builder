@@ -61,7 +61,8 @@
                 e.stopPropagation();
                 e.preventDefault();
                 var cmd=$(e.currentTarget).data('cmd');
-                ve.command.set({command: cmd, element: this.model.id});
+                ve.command.set({command: cmd, element: this.model.id, time:ve.time()},{silent:true});
+                ve.command.trigger('change',ve.command);
             }
 
         },
@@ -338,10 +339,14 @@
                     columnsUsed+=this.getColumnNumber(offset);
                 },this);
             }
-            var columnEmpty=this.total_column-columnsUsed,
+            var columnEmpty=this.total_column-columnsUsed%this.total_column,
                 $columnPlaceHolder=this.$el.find('.ve_col-placeholder');
             $columnPlaceHolder.remove();
             var row_height=this.$el.height();
+            if (row_height < 50 || columnsUsed >= this.total_column)
+            {
+                row_height = 50;
+            }
             if(columnEmpty>0){
                 var row_id=this.model.get('id');
                 $columnPlaceHolder = $('<div class="ve_col-placeholder"></div>');
@@ -364,6 +369,77 @@
                 return  (12*num/dev);
             }
             return 0;
+        },
+        convertRowColumns: function ( layout, editor ) {
+            if ( ! layout ) {
+                return false;
+            }
+            var view = this, columns_contents = [], new_model,
+                columns = this.convertToWidthsArray( layout );
+            var layout_change_elements = [];
+            var layout_old_columns = ve.elements.where( { parent_id: this.model.get( 'id' ) } );
+            _.each( layout_old_columns, function ( column ) {
+                column.set( 'deleted', true );
+                columns_contents.push( {
+                    elements: ve.elements.where( { parent_id: column.get( 'id' ) } ),
+                    params: column.get( 'params' )
+                } );
+            } );
+            _.each( columns, function ( column ) {
+                var prev_settings = columns_contents.shift();
+                if ( _.isObject( prev_settings ) ) {
+                    new_model = editor.create( {
+                        id_base: this.column_tag,
+                        parent_id: this.model.get( 'id' ),
+                        order: ve.elements.nextOrder(),
+                        params: _.extend( {}, prev_settings.params, { width: column } )
+                    } ).last();
+                    _.each( prev_settings.elements, function ( element ) {
+                        element.save( {
+                                parent_id: new_model.get( 'id' ),
+                                order: ve.elements.nextOrder()
+                            },
+                            { silent: true } );
+                        layout_change_elements.push( element );
+                    }, this );
+                } else {
+                    new_model = editor.create( {
+                        id_base: this.column_tag,
+                        parent_id: this.model.get( 'id' ),
+                        order: ve.elements.nextOrder(),
+                        params: { width: column }
+                    } ).last();
+                }
+            }, this );
+            _.each( columns_contents, function ( column ) {
+                _.each( column.elements, function ( element ) {
+                    element.save( {
+                            parent_id: new_model.get( 'id' ),
+                            order: ve.elements.nextOrder()
+                        },
+                        { silent: true } );
+                    layout_change_elements.push( element );
+                    element.view.rowsColumnsConverted && element.view.rowsColumnsConverted()
+                }, this );
+            }, this );
+            editor.render( function () {
+                _.each( layout_change_elements, function ( element ) {
+                    element.trigger( 'change:parent_id' );
+                    element.view.rowsColumnsConverted && element.view.rowsColumnsConverted();
+                } );
+                _.each( layout_old_columns, function ( column ) {
+                    column.destroy();
+                } );
+
+            } );
+            return columns;
+        },
+        convertToWidthsArray: function ( string ) {
+            return _.map( string.split( /_/ ), function ( c ) {
+                var w = c.split( '' );
+                w.splice( Math.floor( c.length / 2 ), 0, '/' );
+                return w.join( '' );
+            } );
         }
 
     });

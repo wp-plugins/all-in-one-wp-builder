@@ -1,6 +1,6 @@
 /*global jQuery,ve */
 var ve =ve || {};
-(function (mod,$){
+(function (mod,$,_){
 
 
     var ElementsEditor = function(elements) {
@@ -57,13 +57,26 @@ var ve =ve || {};
                 that.is_build_complete = true;
             });
         },
-
+        buildFromTemplate:function(template_id){
+            ve.elements.reset();
+            var self=this;
+            ve.content_loaded=false;
+            this.ajax({action:'ve_get_template',template:template_id},false,'json').done(function(result){
+                var html=result.html;
+                var elements=result.elements;
+                html&&elements&&self.loadContent(html,elements);
+                ve.do_action('template_loaded',template_id);
+            });
+        },
         buildFromContent: function() {
-            var content = $('#ve_template-post-content').html()
+            this.loadContent($('#ve_template-post-content').html(),ve.post_elements);
+        },
+        loadContent:function(content,elements){
+            content = content
                 .replace(/<style([^>]*)>\/\*\* ve_js\-placeholder \*\*\//g, '<script$1>')
                 .replace(/<\/style([^>]*)><!\-\- ve_js\-placeholder \-\->/g, '</script$1>');
             try {ve.$page.html(content); } catch(e) {}
-            _.each(ve.post_elements, function(element){
+            _.each(elements, function(element){
                 var $block = ve.$page.find('[data-element-id=' + element.id + ']'),
                     params = _.isObject(element.attrs) ? element.attrs : {};
                 ve.elements.create({
@@ -78,11 +91,10 @@ var ve =ve || {};
                 ve.do_action('load_element',element);
             }, this);
             ve.do_action('content_loaded');
-
         },
 
         buildElement:function(html,element){
-            var new_element,old_view;
+            var old_view;
             if(element){
                 old_view = element.view;
             }
@@ -116,8 +128,7 @@ var ve =ve || {};
 
         },
         renderElement: function($html, element) {
-            var match, view_name = this.getView(element), inner_html = $html, update_inner;
-            //js_re = /[^\"](<script\b[^>]+src[^>]+>|<script\b[^>]*>([\s\S]*?)<\/script>)/gm;
+            var view_name = this.getView(element), inner_html = $html, update_inner;
             ve.last_inner = inner_html.html();
             $('script', inner_html).each(function () {
                 ve.frame_view.doScripts($(this).html());
@@ -133,23 +144,19 @@ var ve =ve || {};
         },
         update: function(model) {
             var shortcode = (model.toString());
-
             this.ajax({action: 've_get_element', elements: [
                 {id: model.get('id'), shortcode: shortcode, id_base: model.get('id_base')}
             ]})
             .done(function(html){
-
                 this.buildElement(html,model);
                 ve.do_action('element_updated',model);
-
-
             });
         },
-        ajax: function(data, url) {
+        ajax: function(data, url, data_type) {
             return this._ajax = $.ajax({
                 url: url || ve.admin_ajax,
                 type: 'POST',
-                dataType: 'html',
+                dataType: data_type || 'html',
                 data: _.extend({post_id: ve.post_id, ve_inline: true}, data),
                 context: this
             });
@@ -206,7 +213,9 @@ var ve =ve || {};
                 post_data = $('#post').serializeArray();
             var data = {};
             for(var x in post_data) {
-                data[post_data[x].name] = post_data[x].value;
+                if(post_data.hasOwnProperty(x)) {
+                    data[post_data[x].name] = post_data[x].value;
+                }
             }
             data['content'] = string;
             if(status) {
@@ -220,21 +229,7 @@ var ve =ve || {};
                 });
         },
 
-        /**
-         * Unescape double quotes in params valus.
-         * @param value
-         * @return {*}
-         */
-        unescapeParam:function (value) {
-            return value.replace(/(\`{2})/g, '"');
-        },
-        setResultMessage: function(string) {
-            this.message = string;
-        },
-        showResultMessage: function() {
-            if(this.message !== false) ve.log(this.message);
-            this.message = false;
-        },
+
         lastID: function() {
             return this.elements.length ? _.last(this.elements).get('id') : '';
         },
@@ -251,7 +246,7 @@ var ve =ve || {};
     mod.Editor=ElementsEditor;
     mod.editor=mod.the_editor=new mod.Editor();
 
-})(ve,jQuery);
+})(ve,jQuery,_);
 
 /**
  * Shortcut

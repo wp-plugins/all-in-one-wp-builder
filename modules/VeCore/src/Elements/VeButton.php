@@ -27,6 +27,7 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
         $this->support('CssEditor');
         $this->post_manager=$this->getVeManager()->getPostManager();
         $this->popup_manager=$this->getVeManager()->getPopupManager();
+        $this->getVeManager()->getResourceManager()->addCss('el-button',__DIR__.'/../../view/css/elements/buttons.css');
         $this->enqueue_js('el-button',__DIR__.'/../../view/js/elements/ve-button.js');
         $this->ready('ve_front.button.start();');
     }
@@ -36,6 +37,8 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
             'value'=>'',
             'style'=>'',
             'size'=>'',
+            'color'=>'',
+            'shape'=>'',
             'link'=>'',
             'link_post'=>'',
             'link_popup'=>'',
@@ -44,16 +47,25 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
             'align' => ''
         ),$instance);
         $this->addClass($instance['class']);
-        $btnClass='';
+        $btnClass=array('ve-button');
         $style=$instance['style'];
         $size=$instance['size'];
-        if(!$style){
-            $style='default';
+        $color=$instance['color'];
+        $shape=$instance['shape'];
+        if($style){
+            $btnClass[]='ve-button-'.$style;
         }
-        $btnClass.=' ve-btn-'.$style;
+        if($shape){
+            $btnClass[]='ve-button-'.$shape;
+        }
         if($size){
-            $btnClass.=' ve-btn-'.$size;
+            $btnClass[]='ve-button-'.$size;
         }
+        if($color){
+            $btnClass[]='ve-button-'.$color;
+        }
+        $btnClass[]=$instance['class'];
+        $btnClass=join(' ',$btnClass);
         $link=$instance['link'];
         $href=$popup=$target='';
         if($link=='post'&&$instance['link_post']){
@@ -75,19 +87,34 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
         foreach($data as $k=>$v){
             $dataAttr[]=sprintf('data-%s="%s"',$k,esc_attr($v));
         }
+        //Move padding inside
+        $paddingNames = ['padding-top','padding-bottom','padding-left','padding-right'];
+        $paddingAttrs = [];
+        foreach($paddingNames as $patt){
+            if($padding=$this->css($patt)){
+
+                $paddingAttrs[]=sprintf('%s:%s;',$patt,$padding);
+                $this->css($patt,'');
+            }
+        }
+        $paddingAttrs = esc_attr(join(' ',$paddingAttrs));
         $dataAttr=join(' ',$dataAttr);
-        printf('<div style="text-align: %4$s"><button class="ve_el-button ve-btn%1$s" value="%2$s"%3$s>%2$s</button></div>',$btnClass,$instance['value'],$dataAttr,$instance['align']);
-        if($popup&&$link=='popup') {
-            //echo $this->popup_manager->getPopup($popup);
+        printf('<div style="text-align: %4$s"><button style="%5$s" class="ve_el-button %1$s" value="%2$s" %3$s>%2$s</button></div>',$btnClass,$instance['value'],$dataAttr,$instance['align'], $paddingAttrs);
+        if($popup&&$link=='popup'&&!ve_is_iframe()&&!ve_is_editor()) {
+            //echo $this->popup_manager->getPopup($popup,array('open'=>''));
             //$this->popup_manager->popupScript();
         }
     }
+
     function form($instance,$content=''){
         $instance=shortcode_atts(array(
             'class'=>'',
             'value'=>'',
             'style'=>'',
+            'color'=>'',
+            'shape'=>'',
             'size'=>'',
+
             'link'=>'',
             'link_post'=>'',
             'link_popup'=>'',
@@ -95,20 +122,38 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
             'link_target'=>'',
             'align' => ''
         ),$instance);
+
         $button_styles=array(
             ''=>'Default',
+            '3d'=>'3d',
+            'raised'=>'raised',
+            'glow'=>'glow',
+            'wrap'=>'wrap',
+        );
+        $button_shapes=array(
+            ''=>'Default',
+            'rounded'=>'rounded',
+            'square'=>'square',
+            'box'=>'box',
+            'circle'=>'circle',
+
+        );
+
+        $button_colors=array(
+            ''=>'Default',
             'primary'=>'primary',
-            'success'=>'success',
-            'info'=>'info',
-            'warning'=>'warning',
-            'danger'=>'danger',
-            'link'=>'link',
+            'action'=>'action',
+            'highlight'=>'highlight',
+            'caution'=>'caution',
+            'royal'=>'royal',
         );
         $button_sizes=array(
             ''=>'Default',
-            'lg'=>'Large',
-            'sm'=>'Small',
-            'xs'=>'Extra Small',
+            'tiny'=>'tiny',
+            'small'=>'small',
+            'large'=>'Large',
+            'jumbo'=>'Large',
+            'giant'=>'giant',
             'block'=>'Full',
         );
         $button_links=array(
@@ -118,10 +163,10 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
             'custom'=>'Custom Link',
         );
         $link_targets=array(
-            ''=>'Current window',
-            '_blank'=>'New window',
-            '_parent'=>'Parent',
-            '_top'=>'Top',
+            ''=>'_self',
+            '_blank'=>'_blank',
+            '_parent'=>'_parent',
+            '_top'=>'_top',
         );
         $align=array(
             'left'=>'left',
@@ -130,6 +175,8 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
         );
         $style=$instance['style'];
         $size=$instance['size'];
+        $color=$instance['color'];
+        $shape=$instance['shape'];
         $link=$instance['link'];
         $balign=$instance['align'];
         $link_post=$instance['link_post'];
@@ -137,15 +184,16 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
         $link_custom=esc_attr($instance['link_url']);
         $link_target=$instance['link_target'];
         ?>
-        <div class="edit_form_line">
-            <label for="<?php echo $this->get_field_id('value');?>">Text</label>
-            <input class="widefat" value="<?php echo $instance['value'];?>" name="<?php echo $this->get_field_name('value');?>" id="<?php echo $this->get_field_id('value');?>">
+        <div class="ve_input_block">
+            <label for="<?php echo $this->get_field_id('value');?>">Text:</label>
+            <input class="medium" value="<?php echo $instance['value'];?>" name="<?php echo $this->get_field_name('value');?>" id="<?php echo $this->get_field_id('value');?>">
         </div>
-        <div class="edit_form_line">
+
+        <div class="ve_input_block">
             <label for="<?php $this->field_id('style');?>">
-               Button Style
+                Button Style:
             </label>
-            <select id="<?php $this->field_id('style');?>" name="<?php $this->field_name('style');?>">
+            <select class="medium" id="<?php $this->field_id('style');?>" name="<?php $this->field_name('style');?>">
                 <?php foreach($button_styles as $o_value=>$o_title){
                     $o_title=ucfirst($o_title);
                     printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$style,false),$o_title);
@@ -153,11 +201,35 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
             </select>
         </div>
 
-        <div class="edit_form_line">
-            <label for="<?php $this->field_id('size');?>">
-                Button size
+        <div class="ve_input_block">
+            <label for="<?php $this->field_id('shape');?>">
+                Button Shape:
             </label>
-            <select id="<?php $this->field_id('size');?>" name="<?php $this->field_name('size');?>">
+            <select class="medium" id="<?php $this->field_id('shape');?>" name="<?php $this->field_name('shape');?>">
+                <?php foreach($button_shapes as $o_value=>$o_title){
+                    $o_title=ucfirst($o_title);
+                    printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$shape,false),$o_title);
+                }?>
+            </select>
+        </div>
+
+        <div class="ve_input_block">
+            <label for="<?php $this->field_id('color');?>">
+               Button Color:
+            </label>
+            <select class="medium" id="<?php $this->field_id('color');?>" name="<?php $this->field_name('color');?>">
+                <?php foreach($button_colors as $o_value=>$o_title){
+                    $o_title=ucfirst($o_title);
+                    printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$color,false),$o_title);
+                }?>
+            </select>
+        </div>
+
+        <div class="ve_input_block">
+            <label for="<?php $this->field_id('size');?>">
+                Button size:
+            </label>
+            <select class="medium" id="<?php $this->field_id('size');?>" name="<?php $this->field_name('size');?>">
                 <?php foreach($button_sizes as $o_value=>$o_title){
                     $o_title=ucfirst($o_title);
                     printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$size,false),$o_title);
@@ -165,30 +237,20 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
             </select>
         </div>
 
-        <div class="edit_form_line">
+        <div class="ve_input_block">
             <label for="<?php $this->field_id('link');?>">
-                Button link
+                Button link:
             </label>
-            <select id="<?php $this->field_id('link');?>" name="<?php $this->field_name('link');?>">
+            <select class="medium" id="<?php $this->field_id('link');?>" name="<?php $this->field_name('link');?>">
                 <?php foreach($button_links as $o_value=>$o_title){
                     $o_title=ucfirst($o_title);
                     printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$link,false),$o_title);
                 }?>
             </select>
         </div>
-        <div class="edit_form_line">
-            <label for="<?php $this->field_id('align');?>">
-                Button Align
-            </label>
-            <select id="<?php $this->field_id('align');?>" name="<?php $this->field_name('align');?>">
-                <?php foreach($align as $o_value=>$o_title){
-                    $o_title=ucfirst($o_title);
-                    printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$balign,false),$o_title);
-                }?>
-            </select>
-        </div>
-        <div class="edit_form_line" data-show-if="<?php $this->field_id('link');?>" data-show-value="post">
-            <label>Select post or page:</label><br/>
+
+        <div class="ve_input_block" data-show-if="<?php $this->field_id('link');?>" data-show-value="post">
+            <label>Select post or page:</label>
             <select id="<?php $this->field_id('link_post');?>" name="<?php $this->field_name('link_post');?>">
                 <?php
                 if($link_post&&$post=get_post($link_post))
@@ -226,8 +288,8 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
                 });
             </script>
         </div>
-        <div class="edit_form_line" data-show-if="<?php $this->field_id('link');?>" data-show-value="popup">
-            <label>Select popup:</label><br/>
+        <div class="ve_input_block" data-show-if="<?php $this->field_id('link');?>" data-show-value="popup">
+            <label>Select popup:</label>
             <select id="<?php $this->field_id('link_popup');?>" name="<?php $this->field_name('link_popup');?>">
                 <?php
                 if($link_popup&&$post=get_post($link_popup))
@@ -265,16 +327,27 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
                 });
             </script>
         </div>
-        <div class="edit_form_line" data-show-if="<?php $this->field_id('link');?>" data-show-value="custom">
+        <div class="ve_input_block" data-show-if="<?php $this->field_id('link');?>" data-show-value="custom">
             <label for="<?php $this->field_id('link_url');?>">Url:</label>
-            <input type="text" class="widefat" id="<?php $this->field_id('link_url');?>" name="<?php $this->field_name('link_url');?>" value="<?php echo $link_custom;?>"/>
+            <input type="text" class="medium" id="<?php $this->field_id('link_url');?>" name="<?php $this->field_name('link_url');?>" value="<?php echo $link_custom;?>"/>
         </div>
-        <div class="edit_form_line" data-show-if="<?php $this->field_id('link');?>" data-show-value='["custom","post"]'>
+        <div class="ve_input_block" data-show-if="<?php $this->field_id('link');?>" data-show-value='["custom","post"]'>
             <label for="<?php $this->field_id('link_target');?>">Link Target:</label>
-            <select name="<?php $this->field_name('link_target');?>" id="<?php $this->field_id('link_target');?>">
+            <select class="medium" name="<?php $this->field_name('link_target');?>" id="<?php $this->field_id('link_target');?>">
                 <?php foreach($link_targets as $o_value=>$o_title){
 
                     printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$link_target,false),$o_title);
+                }?>
+            </select>
+        </div>
+        <div class="ve_input_block">
+            <label for="<?php $this->field_id('align');?>">
+                Button Align:
+            </label>
+            <select class="medium" id="<?php $this->field_id('align');?>" name="<?php $this->field_name('align');?>">
+                <?php foreach($align as $o_value=>$o_title){
+                    $o_title=ucfirst($o_title);
+                    printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$balign,false),$o_title);
                 }?>
             </select>
         </div>
@@ -284,7 +357,7 @@ top: 80px;
 width: auto;"></div>
 
         <p><label for="<?php echo $this->get_field_id('class'); ?>"><?php _e('Extra class:'); ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id('class'); ?>" name="<?php echo $this->get_field_name('class'); ?>" type="text" value="<?php echo esc_attr($instance['class']); ?>" /></p>
+            <input class="medium" id="<?php echo $this->get_field_id('class'); ?>" name="<?php echo $this->get_field_name('class'); ?>" type="text" value="<?php echo esc_attr($instance['class']); ?>" /></p>
 
     <?php
     }

@@ -24,19 +24,22 @@ if(_.isUndefined(ve)) var ve = {};
         ve.setFrameSize('100%');
         //Main view target to body
         ve.view=new ve.EditorView({el:'body'});
-        //Panel view target to panel
-        ve.panel=new ve.PanelView({el:'#ve-panel'});
+
         //top bar view
         ve.topbar=new ve.TopBar({el:'#ve-topbar'});
+        //Panel view target to panel
+        ve.panel=new ve.PanelView({el:'#ve-panel'});
         //form view
         ve.formview=new ve.FormView({el:'body'});
         //Iframe view target to iframe body
         ve.frame_view= new ve.FrameView({el:ve.$frame_document.find('body').get(0)});
         //Content View target to post content
         ve.content_view=new ve.PostContentView({el:ve.$page});
+        ve.do_action('load');
         ve.view.render();
         ve.the_editor.buildFromContent();
         ve.panel.refresh();
+        ve.do_action('ve_loaded');
 
 
     };

@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: All In One WP Builder
-Plugin URI: http://allinonewpbuilder.com/
-Description: Build anything in WordPress with easy drag drop interface
-Author: All In One WP Builder
-Version: 1.0
-Author URI: http://allinonewpbuilder.com/
+Plugin Name: Visual Editor
+Plugin URI: http://wordpress.org/
+Description: Visual front-end editor
+Author: VE Page builder
+Version: 1.1
+Author URI: http://wordpress.org/
 */
 define('VE_DIR',__DIR__);
 define('VE_URL',plugins_url('',__FILE__));

@@ -69,7 +69,8 @@ class VE_View_Manager extends VE_Manager_Abstract{
         }
         return $this->data[$var];
     }
-    function render($template=null,$data=array()){
+    function render($template=null,$data=array(),$echo=true){
+        $content='';
         if($template){
             $this->setTemplate($template);
         }
@@ -78,19 +79,27 @@ class VE_View_Manager extends VE_Manager_Abstract{
             if ($data&&!$this->getData()) {
                 $this->setData($data);
             }
-            return $this->loadFile($___template_file,$data);
+            $content = $this->loadFile($___template_file,$data);
         }
-        return $this;
+        if($echo){
+            echo $content;
+        }
+        return $content;
     }
-    function loadFile($file,$data=array()){
+    function getHtml($template=null,$data=array()){
+        return $this->render($template,$data,false);
+    }
+    function loadFile($___file,$data=array()){
         if(!$data) {
             $data = $this->getData();
         }
         unset($data['this']);
         extract($data,EXTR_OVERWRITE);
-        if($file){
-            require $file;
+        if($___file){
+            ob_start();
+            require $___file;
+            return ob_get_clean();
         }
-        return $this;
+        return '';
     }
 }

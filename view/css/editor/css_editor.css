@@ -43,6 +43,22 @@
   right: 5px;
   margin-top: -12px;
 }
+.ve_css-editor .ve_layout-onion input.border-radius-0 {
+  top: 15px;
+  left: 15px;
+}
+.ve_css-editor .ve_layout-onion input.border-radius-1 {
+  top: 15px;
+  right: 15px;
+}
+.ve_css-editor .ve_layout-onion input.border-radius-2 {
+  right: 15px;
+  bottom: 15px;
+}
+.ve_css-editor .ve_layout-onion input.border-radius-3 {
+  bottom: 15px;
+  left: 15px;
+}
 .ve_css-editor .ve_layout-onion .ve_margin {
   border: 1px dashed #bababa;
   margin: 1px;

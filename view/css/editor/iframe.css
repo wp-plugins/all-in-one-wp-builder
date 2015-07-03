@@ -100,10 +100,6 @@
   cursor: pointer;
   float: left;
 }
-.compose-mode .ve_selected.ve_element-ve_row .ve_row,
-.view-mode .ve_selected.ve_element-ve_row .ve_row {
-  box-shadow: inset 0px 0px 0 2000px rgba(0, 0, 0, 0.1);
-}
 .compose-mode .ve_selected.ve_element-ve_col,
 .view-mode .ve_selected.ve_element-ve_col {
   outline: 1px dashed red !important;

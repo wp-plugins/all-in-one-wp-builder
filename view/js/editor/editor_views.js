@@ -7,7 +7,8 @@ var ve=ve||{};
         mode: 'view',
         current_size: '100%',
         events:{
-            "click #toggle-mode":"toggleMode"
+            "click #toggle-mode":"toggleMode",
+            "click [data-cmd]":"onCmd"
         },
 
         initialize: function() {
@@ -19,6 +20,14 @@ var ve=ve||{};
             ve.$page.addClass('ve_post_content ve-post-content');
             return this;
         },
+        onCmd:function(e){
+            if(e){
+                e.stopPropagation();
+                e.preventDefault();
+                var cmd=$(e.currentTarget).data('cmd');
+                ve.command.set({command: cmd, element: e.currentTarget, time:ve.time()});
+            }
+        },
         cancel: function(e) {
             _.isObject(e) && e.preventDefault();
             window.location.href = $(e.currentTarget).data('url');
@@ -27,12 +36,7 @@ var ve=ve||{};
             _.isObject(e) && e.preventDefault();
             ve.the_editor.save($(e.currentTarget).data('changeStatus'));
         },
-        resizeFrame: function(e) {
 
-        },
-        editCloned: function(e) {
-
-        },
         resizeWindow: function() {
             ve.setFrameSize(this.current_size);
         },
@@ -216,10 +220,12 @@ var ve=ve||{};
                     if($(this).is('.ve_buttons')) {
                         to='';
                     }
+                    var $element=ui.draggable.closest('[data-id-base]');
                     ve.command.set({
                         command: 'add',
-                        'from': ui.draggable.closest('[data-id-base]').data('id-base'),
+                        'from': $element.data('id-base'),
                         'to': to,
+                        'params':$element.data('params'),
                         rand:ve_guid()
                     });
 
@@ -253,88 +259,16 @@ var ve=ve||{};
         }
     });
 
-    ve.TopBar=Backbone.View.extend({
-        events:{
-            //'click #ve-element-form .save':'updateElement',
-            'click #update-post': 'savePost',
-            'click #publish-post': 'publishPost',
-            'change #screensize' : 'setScreenSize'
-        },
-        initialize:function(){
-            size = ve.getPostSetting('screen_size') || (1170 + 82);
-            size = parseInt(size) - 82;
-            this.$('#screensize').val(size);
-            _this=this;
-            $.Shortcuts.add({
-                type: 'hold',
-                mask: 'Up',
-                enableInInput:true,
-                handler: function(e) {
-                    if($(e.target).is('#screensize')) {
-                        _this.screen_size().up();
-                    }
-                }
-                //list:"topbar"
 
-            }).add({
-                type: 'hold',
-                mask: 'Down',
-                enableInInput:true,
-                handler: function(e) {
-                    if($(e.target).is('#screensize')) {
-                        _this.screen_size().down();
-                    }
-                }
-                //list:"topbar"
-
-            });
-            //$.Shortcuts.start(this.$('#screensize'),'topbar');
-        },
-        screen_size:function(){
-            var that=this;
-            return {
-                up:function(){
-                    var current_size=that.$('#screensize').val();
-                    if(current_size<1170) {
-                        current_size++;
-                        that.$('#screensize').val(current_size);
-                        that.setScreenSize(current_size);
-                    }
-                },
-                down:function(){
-                    var current_size=that.$('#screensize').val();
-                    if(current_size>360) {
-                        current_size--;
-                        that.$('#screensize').val(current_size);
-                        that.setScreenSize(current_size);
-                    }
-                }
-            }
-        },
-        savePost:function(e){
-            ve.the_editor.save();
-        },
-        publishPost: function(e){
-            ve.the_editor.save('publish');
-        },
-        setScreenSize:function(){
-            new_size = parseInt(this.$('#screensize').val()) + 82; //for padding
-            ve.frame_view.window.ve_iframe.resizeTo(new_size);
-        },
-        onScreenResize: function(event, ui){
-            this.$el.find('#screensize').val(parseInt(ui.size.width) - 82);
-        },
-
-        getScreenWidth: function(){
-            size = this.$el.find('#screensize').val()||1170;
-            size = parseInt(size) + 82;
-            return size;
-        }
-    });
     ve.FormView=Backbone.View.extend({
         initialize:function(){
             this.initAjaxForm();
             this.formInputCondition();
+            this.initSettingForms();
+        },
+        initSettingForms:function(){
+            $('.ve-ui-tabs').tabs();
+            $('.ve_color-control').wpColorPicker();
         },
         formInputCondition:function(){
             $('[data-show-if]',this.$el).each(function(){
@@ -391,20 +325,60 @@ var ve=ve||{};
             var _this=this;
             $('.ve-ajax-form').on('submit',function(e){
                 e.preventDefault();
-                var formData=$(this).serializeObject();
                 var form=$(this);
+                var formData=form.serializeObject();
+                if(!formData||!formData.action){
+                    return false;
+                }
+                formData=ve.apply_filters('ajax_form_data',formData,formData.action);
+                if(!formData||!formData.action){
+                    return false;
+                }
 
-                ve.ajax(formData,"json").done(function(result){
-                    ve.do_action('ajax_form_done',formData.action,result,form,formData);
-                    ve.do_action('ajax_form_done_'+formData.action,result,form,formData);
-                    if(form.attr('data-update-values')){
-                        _this.updateFormValues(form,result);
+                ve.ajax(formData, "json").done(function (result) {
+                    ve.do_action('ajax_form_done', formData.action, formData, result, form);
+                    ve.do_action('ajax_form_done_' + formData.action, formData, result, form);
+                    if (form.attr('data-update-values')) {
+                        _this.updateFormValues(form, result);
                     }
                 });
+
+                return false;
+            }).on('click','[data-submit]',function(e){
+                e.preventDefault();
+                var submit=$(this);
+                var form=submit.closest('form');
+                var formData=form.serializeObject();
+                var extraData=submit.data('submit');
+                var overwrite=submit.data('overwrite');
+                if(extraData){
+                    if(overwrite){
+                        formData=extraData;
+                    }else {
+                        _.extend(formData, extraData);
+                    }
+                }
+                if(!formData||!formData.action){
+                    return false;
+                }
+                formData=ve.apply_filters('ajax_form_data',formData,formData.action);
+                if(!formData||!formData.action){
+                    return false;
+                }
+                form.data('this',this);
+                ve.ajax(formData, "json").done(function (result) {
+                    ve.do_action('ajax_form_done', formData.action, formData, result, form);
+                    ve.do_action('ajax_form_done_' + formData.action, formData, result, form);
+                    if (form.attr('data-update-values')) {
+                        _this.updateFormValues(form, result);
+                    }
+                });
+
                 return false;
             });
-            ve.on('ajax_form_done',function(formData,resonse,object){
-                _this.showMessage('Updated',3000,object);
+            ve.on('ajax_form_done',function(action,data,res,form){
+                var message=res.message||form.data('message')||data.message||'Updated';
+                _this.showMessage(message,3000,form);
             },this);
         },
         showMessage:function(message,timeout,target) {

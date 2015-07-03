@@ -6,7 +6,7 @@ class VeCore_VeText extends Ve_Element implements VE_Element_Interface{
         $options=array(
             'title'=>'Text Block',
             'description'=>'Row description',
-            'icon_class'=>'fa fa-file-text',
+            'icon_class'=>'fa fa-text-width',
             'container'=>false,
             'has_content'=>true,
             'defaults'=>array('content'=>'this is a text block'),
@@ -14,7 +14,11 @@ class VeCore_VeText extends Ve_Element implements VE_Element_Interface{
         );
         parent::__construct($id_base,$name,$options);
     }
-
+    function init(){
+        $this->enqueue_js('el-text',__DIR__.'/../../view/js/elements/ve-text.js');
+        $this->ready('ve_front.text.start();');
+        $this->support('CssEditor');
+    }
     function element($instance,$content=''){
         $instance=shortcode_atts(array('class'=>''),$instance);
         $this->addClass($instance['class']);

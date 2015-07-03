@@ -1,7 +1,7 @@
 <?php
 class Ve_Element implements VE_Element_Interface{
     use VE_Element_Trait;
-    var $id;
+
     var $name;
     var $lv;
 
@@ -23,37 +23,47 @@ class Ve_Element implements VE_Element_Interface{
      * @var Ve_Feature_Abstract[]
      */
     var $features;
-    var $feature_default_title='Setting';
+    var $primary_feature_title='Setting';
+
     /**
      * Element inline style
      * @var array
      */
     var $css=array();
     /**
+     * Element html id
+     * @var array
+     */
+    var $id=array();
+    /**
      * Element html class
      * @var array
      */
+
     var $classes=array();
+
+    /**
+     * Element Default class
+     */
+    var $default_class=array();
     /**
      * Element html attributes
      * @var array()
      */
-    var $attributes;
-    var $before;
-    var $after;
+    var $attributes=array();
+    var $before=array();
+    var $after=array();
     /**
      * Element form scripts
      * @var array
      */
     var $scripts;
 
-    /**
-     * store element for reset element
-     * @var VE_Element
-     */
-    var $_instance;
+    var $instance=0;
     var $inlineScript='';
     var $previewEnable=false;
+
+    var $updateStack=array();
 
 
     function __construct($id_base='',$name='',$options=array()){
@@ -69,9 +79,9 @@ class Ve_Element implements VE_Element_Interface{
         if(!empty($this->options['container_element'])){
             $this->options['container']=1;
         }
-        $this->addClass($class_name);
+        $this->default_class[]=$class_name;
         if(isset($this->options['classname'])){
-            $this->addClass($this->options['classname']);
+            $this->default_class[]=$this->options['classname'];
             unset($this->options['classname']);
         }
         if(isset($this->options['lv'])){
@@ -89,11 +99,12 @@ class Ve_Element implements VE_Element_Interface{
             $this->lv=10;
         }
         add_action('ve_elements_init',array($this,'_init'));
+        $this->instance=0;
+
 
     }
     function _init(){
         $this->init();
-        //echo ve_is_iframe();die;
         if(!ve_is_iframe()) {
             add_action('wp_footer', array($this,'add_front_js'));
             add_action('wp_footer', 've_print_front_inline_js',1000);
@@ -107,7 +118,7 @@ class Ve_Element implements VE_Element_Interface{
     function support($feature,$title=''){
         if(!$this->supported($feature)) {
             $featureInstance = $this->getFeatureManager()->feature($feature, $this);
-            $featureInstance->_init();
+            $featureInstance->_init($this);
             $this->addFeature($featureInstance, $feature, $title);
         }
         return $this;
@@ -159,7 +170,7 @@ class Ve_Element implements VE_Element_Interface{
      * @param $content
      */
     public function update( $atts,$content ) {
-        $this->_instance=clone $this;
+        $this->_updated=true;
         if($this->features){
             foreach($this->features as $f){
                 $f->update($atts,$content);
@@ -167,15 +178,7 @@ class Ve_Element implements VE_Element_Interface{
         }
         do_action('ve_update_element',$this,$atts,$content);
     }
-    function reset(){
-        $reset=array('css','scripts','classes','attributes','before','after');
-        foreach($this->_instance as $k=>$v){
-            if(in_array($k,$reset)) {
-                $this->$k = $v;
-            }
-        }
-        do_action('ve_reset_element',$this);
-    }
+
 
 
     /**
@@ -229,6 +232,15 @@ class Ve_Element implements VE_Element_Interface{
     }
 
     public function display_callback($atts, $content='' ) {
+
+        return $this->display_element($atts,$content);
+    }
+    function default_settings(){
+        $this->addClass($this->default_class);
+    }
+
+    function display_element($atts, $content='' ){
+        $this->next_instance();
         $this->update($atts,$content);
         ob_start();
         if(ve_element_editing()&&method_exists($this,'preview')){
@@ -240,8 +252,8 @@ class Ve_Element implements VE_Element_Interface{
             $this->print_inline_js();
         }
         $output= ob_get_clean();
-        $output= $this->before.$this->element_wrapper_start($atts,$content).$output.$this->element_wrapper_end($atts,$content).$this->after;
-        $this->reset();
+        $this->the_instance();
+        $output= $this->get_before() .$this->element_wrapper_start($atts,$content).$output.$this->element_wrapper_end($atts,$content).$this->get_after();
         return $output;
     }
     /**
@@ -284,20 +296,41 @@ class Ve_Element implements VE_Element_Interface{
     function element_wrapper_end(){
         return '</div>';
     }
-    function get_attributes(){
+
+    /**###########################
+     * Instance related functions
+     *****************************/
+
+    /**
+     * Next instance
+     */
+    function next_instance(){
+        static $id=-1;
+        $id++;
+        $this->instance=$id;
+        array_push($this->updateStack,$this->instance);
+        $this->default_settings();
+    }
+    function the_instance(){
+        $this->instance=array_pop($this->updateStack);
+    }
+    function get_attributes($att=null){
         $attributes=array();
-        foreach($this->attributes as $k=>$v){
-            $attributes[$k]=$v;
+        if(!empty($this->attributes[$this->instance])){
+            foreach($this->attributes[$this->instance] as $k=>$v){
+                $attributes[$k]=$v;
+            }
         }
+
         $output=array();
-        if($this->id){
+        if(isset($this->id[$this->instance])){
             $attributes['id']=$this->id;
         }
-        if(!isset($attributes['style'])&&$this->css){
-            $attributes['style']=$this->css;
+        if(!isset($attributes['style'])&&isset($this->css[$this->instance])){
+            $attributes['style']=$this->css[$this->instance];
         }
-        if(!isset($attributes['class'])&&$this->classes){
-            $attributes['class']=$this->classes;
+        if(!isset($attributes['class'])&&isset($this->classes[$this->instance])){
+            $attributes['class']=$this->classes[$this->instance];
         }
         if(isset($attributes['style'])&&is_array($attributes['style'])){
             $attributes['style']=ve_style_string($attributes['style']);
@@ -314,31 +347,116 @@ class Ve_Element implements VE_Element_Interface{
                 if(in_array($k,$remove_empty_attributes)&&empty($v)){
                     continue;
                 }
-                $output[] = sprintf('%s="%s"', $k, esc_attr($v));
+                if($att){
+                    if(is_array($att)){
+                        if(in_array($k,$att)){
+                            $output[] = sprintf('%s="%s"', $k, esc_attr($v));
+                        }
+                    }else if($att==$k){
+                        $output[] = sprintf('%s="%s"', $k, esc_attr($v));
+                        break;
+                    }
+                }else {
+                    $output[] = sprintf('%s="%s"', $k, esc_attr($v));
+                }
             }
         }
 
         $output=join(' ',$output);
         return $output;
     }
-
-    function css($name,$val){
-        if($val) {
-            $this->css[$name] = $val;
-        }else{
-            unset($this->css[$name]);
+    function setId($id){
+        $this->id[$this->instance]=$id;
+        return $this;
+    }
+    function addClass($class){
+        if(empty($class)){
+            return $this;
         }
-        $this->attributes['style']=$this->css;
+        if(is_string($class)&&($class=trim($class))&&strpos($class,' ')){
+            $class=explode(' ',$class);
+        }
+        if(!isset($this->classes[$this->instance])||!is_array($this->classes[$this->instance])){
+            $this->classes[$this->instance]=array();
+        }
+        if(is_array($class)){
+            $class=array_map('sanitize_html_class',$class);
+            $class=array_filter($class);
+            $this->classes[$this->instance]=array_merge($this->classes[$this->instance],$class);
+            $this->classes[$this->instance]=array_unique($this->classes[$this->instance]);
+            return $this;
+        }
+        $class=sanitize_html_class($class);
+
+        if($class&&!in_array($class,$this->classes[$this->instance])){
+            $this->classes[$this->instance][]=$class;
+        }
+        $this->attributes[$this->instance]['class']=$this->classes[$this->instance];
+        return $this;
+
+    }
+    function removeClass($class){
+        if(empty($class)){
+            return $this;
+        }
+        if(is_string($class)&&strpos($class,' ')){
+            $class=explode(' ',$class);
+        }
+
+        if(is_array($class)){
+            $class=array_map('sanitize_html_class',$class);
+            $this->classes[$this->instance]=array_diff($this->classes[$this->instance],$class);
+            return $this;
+        }
+        $class=sanitize_html_class($class);
+        if($class) {
+            $this->classes[$this->instance] = array_diff($this->classes[$this->instance], array($class));
+        }
         return $this;
     }
-    function before($before){
-        $this->before=$before;
+    function attr($k,$v=null){
+        $k=sanitize_key($k);
+        if($k){
+            unset($this->attributes[$this->instance][$k]);//unset to remove link to previous value if any
+            $this->attributes[$this->instance][$k]=$v;
+        }
         return $this;
     }
-    function after($after){
-        $this->after=$after;
+    function removeAttr($k){
+        $k=sanitize_key($k);
+        if(isset($this->attributes[$this->instance][$k])){
+            unset($this->attributes[$this->instance][$k]);
+        }
         return $this;
     }
+    function css($name,$val='__ve_get_value'){
+        if($val==='__ve_get_value'){
+            return isset($this->css[$this->instance][$name])?$this->css[$this->instance][$name]:'';
+        }
+        if($val) {
+            $this->css[$this->instance][$name] = $val;
+        }else{
+            unset($this->css[$this->instance][$name]);
+        }
+        if(isset($this->css[$this->instance]))
+        $this->attributes[$this->instance]['style']=$this->css[$this->instance];
+        return $this;
+    }
+    function get_before(){
+        return isset($this->before[$this->instance])?$this->before[$this->instance]:'';
+    }
+    function get_after(){
+        return isset($this->after[$this->instance])?$this->after[$this->instance]:'';
+    }
+    function before($before=null){
+        $this->before[$this->instance]=$before;
+        return $this;
+    }
+    function after($after=null){
+        $this->after[$this->instance]=$after;
+        return $this;
+    }
+
     function enqueue_js($handle, $src = false, $deps = array('ve_front'), $ver = false, $footer=true){
         $this->getVeManager()->getResourceManager()->addJs($handle,$src,$deps,$ver,$footer);
     }
@@ -417,70 +535,7 @@ class Ve_Element implements VE_Element_Interface{
     function element_content($content){
         printf('<div class="element-content">%s</div>',$content);
     }
-    function setId($id){
-        $this->id=$id;
-        return $this;
-    }
-    function addClass($class){
-        if(empty($class)){
-            return $this;
-        }
-        if(is_string($class)&&($class=trim($class))&&strpos($class,' ')){
-            $class=explode(' ',$class);
-        }
-        if(!is_array($this->classes)){
-            $this->classes=array();
-        }
-        if(is_array($class)){
-            $class=array_map('sanitize_html_class',$class);
-            $class=array_filter($class);
-            $this->classes=array_merge($this->classes,$class);
-            $this->classes=array_unique($this->classes);
-            return $this;
-        }
-        $class=sanitize_html_class($class);
 
-        if($class&&!in_array($class,$this->classes)){
-            $this->classes[]=$class;
-        }
-        $this->attributes['class']=$this->classes;
-        return $this;
-
-    }
-    function removeClass($class){
-        if(empty($class)){
-            return $this;
-        }
-        if(is_string($class)&&strpos($class,' ')){
-            $class=explode(' ',$class);
-        }
-
-        if(is_array($class)){
-            $class=array_map('sanitize_html_class',$class);
-            $this->classes=array_diff($this->classes,$class);
-            return $this;
-        }
-        $class=sanitize_html_class($class);
-        if($class) {
-            $this->classes = array_diff($this->classes, array($class));
-        }
-        return $this;
-    }
-    function attr($k,$v=null){
-        $k=sanitize_key($k);
-        if($k){
-            unset($this->attributes[$k]);//unset to remove link to previous value if any
-            $this->attributes[$k]=$v;
-        }
-        return $this;
-    }
-    function removeAttr($k){
-        $k=sanitize_key($k);
-        if(isset($this->attributes[$k])){
-            unset($this->attributes[$k]);
-        }
-        return $this;
-    }
 
 
     /**

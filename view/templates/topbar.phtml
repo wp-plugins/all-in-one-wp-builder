@@ -11,34 +11,22 @@
         <img src="<?php echo VE_URL.'/view/images/logo.png'?>" />
     </div>
     <ul class="panel-items-control">
-<!--        <li>-->
-<!--            <a href="#" data-show-item="panel-item-1">Elements <i class="fa fa-angle-down"></i></a>-->
-<!--            <ul class="submenu">-->
-<!--                <li><a href="#"> All </a></li>-->
-<!--                <li><a href="#"> Most used </a></li>-->
-<!--                <li><a href="#"> Custom </a></li>-->
-<!--                <li><a href="#"> Media </a></li>-->
-<!---->
-<!--            </ul>-->
-<!--        </li>-->
+        <li class="elements-filter">
+            <a href="#" data-show-item="panel-item-1">Widgets <i class="fa fa-angle-down"></i></a>
+            <ul class="submenu">
+                <li><a data-filter="all" href="#"> All </a></li>
+                <li><a data-filter="most-used" href="#"> Most used </a></li>
+                <li><a data-filter="custom" href="#"> Custom </a></li>
+                <li><a data-filter="media" href="#"> Media </a></li>
+            </ul>
+        </li>
         <li>
             <a href="#" data-show-item><?php echo $editor->getPostType();?> Setting <i class="fa fa-angle-down"></i></a>
             <ul class="submenu">
-                <?php if($editor->isPopup()){
-                    echo '<li>';
-                    $this->render('panel/popup-settings');
-                    echo '</li>';
-                }
-                else if($editor->isWidget()){
-                    echo '<li>';
-                    $this->render('panel/widget-settings');
-                    echo '</li>';
-                }
-                else {
-                    echo '<li>';
-                    $this->render('panel/page-settings');
-                    echo '</li>';
-                }
+                <?php
+                echo '<li>';
+                $this->render('panel/page-settings');
+                echo '</li>';
                 ?>
             </ul>
 
@@ -53,13 +41,27 @@
             <li>
                 <a id="toggle-mode" class="vebtn">Grid Off</a>
             </li>
+<!--
+            <li>
+                <a href="#" data-show-item>Save As <i class="fa fa-angle-down"></i></a>
+                <ul class="submenu">
+                    <?php if(!$editor->isTemplate()){?>
+                        <li><?php $this->render('topbar/save-template');?></li>
+                    <?php }?>
+                    <?php if(!$editor->isElement()){?>
+                        <li><?php $this->render('topbar/custom-element');?></li>
+                    <?php }?>
+                </ul>
+-->
+            </li>
+
             <li>
                 <a href="#" data-show-item>Save <i class="fa fa-angle-down"></i></a>
                 <ul class="submenu">
                     <li><a id="update-post">Draft</a></li>
                     <li><a id="publish-post">Publish</a></li>
                     <?php if(!$editor->isWidget() && !$editor->isPopup()) {?>
-                    <li><a target="_blank" id="view_post_link" href="<?php echo get_permalink($editor->post_id);?>">View</a></li>
+                    <li><a id="view_post_link" href="<?php echo get_permalink($editor->post_id);?>">View</a></li>
                     <?php }?>
                 </ul>
 
@@ -67,8 +69,7 @@
             <li>
                 <a href="#" data-show-item>New <i class="fa fa-angle-down"></i></a>
                 <ul class="submenu">
-<!--                    <li><a href="--><?php //echo admin_url("post-new.php?post_type=ve-popup");?><!--">Popup</a></li>-->
-<!--                    <li><a href="--><?php //echo admin_url("post-new.php?post_type=ve-widget");?><!--">Widget</a></li>-->
+
                     <li><a  href="<?php echo admin_url("edit.php?ve_action=ve_inline&post_id=new&post_type=page");?>">Page</a></li>
                 </ul>
 
@@ -76,9 +77,8 @@
             <li>
                 <a href="#" data-show-item>Edit <i class="fa fa-angle-down"></i></a>
                 <ul class="submenu">
-<!--                    <li>--><?php //$this->render('panel/popup-listing');?><!--</li>-->
-<!--                    <li>--><?php //$this->render('panel/widget-listing');?><!--</li>-->
                     <li><?php $this->render('panel/page-listing');?></li>
+
                 </ul>
 
             </li>

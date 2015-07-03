@@ -41,16 +41,7 @@ class VE_Editor extends VE_Manager_Abstract{
         $ve=$this->getVeManager();
         $this->viewManager=$ve->getViewManager();
         $this->elementManager=$ve->getElementManager();
-        add_action( 'admin_menu', function(){
-            $page_title='VE Posts';
-            $menu_title='Ve Posts';
-            $capability='edit-posts';
-            $menu_slug='edit.php?post_type=page';
-            $function=false;
-            $icon_url='';
-            $position=null;
-            //add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
-        } );
+
     }
     function configure(){
         add_action('init',array($this,'init'));
@@ -73,36 +64,19 @@ class VE_Editor extends VE_Manager_Abstract{
             $this->buildEditablePage();
         } else {
             // Is it is simple page just enable buttons and controls
-            $this->buildPage();
+            //$this->buildPage();
         }
     }
     function addHooks(){
-        //add_filter( 'page_row_actions', array( &$this, 'renderRowAction' ) );
-        //add_filter( 'post_row_actions', array( &$this, 'renderRowAction' ) );
         add_shortcode($this->base_elements['anchor'],array($this,'containerAnchor'));
-        add_action( 'admin_menu', array($this,'buildAdminMenus') );
-        add_action('wp_loaded',function(){
-            $ve_pages=array('ve-posts','ve-pages');
-            if(isset($_GET['page'])){
-                if(in_array($_GET['page'],$ve_pages)){
-                    unset($_GET['post_type']);
-                    unset($_REQUEST['post_type']);
-                    unset($_GET['_wp_http_referer']);
-                    add_filter( 'parse_query', array($this,'posts_filter') );
-                }
-            }
-        });
         add_action('wp_insert_post',array($this,'updatePost'));
+
+        add_filter( 'get_edit_post_link', array( &$this, 'editPostLink' ) ,10,2);
     }
 
 
-    function posts_filter( $query ){
-        if(is_admin()) {
-            $query->query_vars['meta_key'] = '_use_ve';
-            $query->query_vars['meta_value'] = '1';
-        }
 
-    }
+
     function updatePost($post_id){
         if(!empty($_POST['ve_inline'])){
             update_post_meta($post_id,'_use_ve','1');
@@ -160,33 +134,7 @@ class VE_Editor extends VE_Manager_Abstract{
         return $css;
     }
 
-    function buildAdminMenus(){
-        add_menu_page( __( 'Visual Editor', 'visual_editor' ),  __( 'Visual Editor', 'visual_editor' ), 'manage_categories', 'visual-editor-admin', array($this,'adminDashboard'));
 
-//        add_submenu_page( 'visual-editor-admin', __( 'Ve Pages', 'visual_editor' ), __( 'Ve Pages', 'visual_editor' ), 'manage_categories', 've-pages', array($this,'adminListPages'));
-        add_submenu_page( 'visual-editor-admin', __( 'Create Page', 'visual_editor' ), __( 'Create Page', 'visual_editor' ), 'manage_categories', 'edit.php?ve_action=ve_inline&post_type=page&post_id=new', null);
-
-//        add_submenu_page( 'visual-editor-admin', __( 'Ve Widgets', 'visual_editor' ), __( 'Ve Widgets', 'visual_editor' ), 'manage_categories', 'edit.php?post_type=ve-widget', null);
-//        add_submenu_page( 'visual-editor-admin', __( 'Create Widget', 'visual_editor' ), __( 'Create Widget', 'visual_editor' ), 'manage_categories', 'edit.php?ve_action=ve_inline&post_type=ve-widget&post_id=new', null);
-//
-//        add_submenu_page( 'visual-editor-admin', __( 'Ve Popups', 'visual_editor' ), __( 'Ve Popups', 'visual_editor' ), 'manage_categories', 'edit.php?post_type=ve-popup', null);
-//        add_submenu_page( 'visual-editor-admin', __( 'Create Popup', 'visual_editor' ), __( 'Create Popup', 'visual_editor' ), 'manage_categories', 'edit.php?ve_action=ve_inline&post_type=ve-popup&post_id=new', null);
-//
-//        add_submenu_page( 'visual-editor-admin', __( 'Ve Templates', 'visual_editor' ), __( 'Ve Templates', 'visual_editor' ), 'manage_categories', 'edit.php?post_type=ve-template', null);
-//        add_submenu_page( 'visual-editor-admin', __( 'Create Template', 'visual_editor' ), __( 'Create Template', 'visual_editor' ), 'manage_categories', 'edit.php?ve_action=ve_inline&post_type=ve-template&post_id=new', null);
-    }
-    function adminListPages(){
-        $this->_adminListPosts('page');
-    }
-    function adminListWidgets(){
-        $this->_adminListPosts('ve-widget');
-    }
-    function _adminListPosts($typenow='post'){
-        include VE_CORE.'/templates/list-posts.phtml';
-    }
-    function adminDashboard(){
-        echo '<h1>Visual Editor Dashboard</h1>';
-    }
 
     function renderRowAction( $actions ) {
         $post = get_post();
@@ -199,28 +147,30 @@ class VE_Editor extends VE_Manager_Abstract{
     }
     function canUseEditor( $post_id = null ) {
         get_currentuserinfo();
-        $show = true;
-        $post_id = $post_id != null ? $post_id : get_the_ID();
+        if(!$post_id){
+            $post_id=get_the_ID();
+        }
         if ( ! current_user_can( 'edit_post', $post_id ) ) return false;
         $use_ve = false;
-        if(!empty($post_id))
-        {
+        if(!empty($post_id)) {
             $use_ve = get_post_meta($post_id,'_use_ve',true);
         }
+        $post=get_post($post_id);
 
-
-        return $use_ve=='1'&&$show && in_array( get_post_type(), $this->getVeManager()->getPostManager()->getPostTypes() );
+        return in_array( $post->post_type, $this->getVeManager()->getPostManager()->getPostTypes(true) ) ||( $use_ve=='1' && in_array( $post->post_type, $this->getVeManager()->getPostManager()->getPostTypes() ));
     }
-    function getEditUrl($id='',$url=''){
-        $the_ID = ( strlen( $id ) > 0 ? $id : get_the_ID() );
+    function getEditUrl($post_id=null,$url=''){
+        if(!$post_id){
+            $post_id=get_the_ID();
+        }
         return apply_filters( 've_get_edit_url', admin_url() .
             'edit.php?ve_action=ve_inline&post_id=' .
-            $the_ID . '&post_type=' . get_post_type( $the_ID ) .
+            $post_id . '&post_type=' . get_post_type( $post_id ) .
             ( strlen( $url ) > 0 ? '&url=' . rawurlencode( $url ) : '' ) );
 
     }
 
-    function getPostType(){
+    function getPostType($id=''){
         $the_ID = ( strlen( $id ) > 0 ? $id : get_the_ID() );
         $type = get_post_type( $the_ID );
         $text = "";
@@ -322,9 +272,11 @@ class VE_Editor extends VE_Manager_Abstract{
         unset($post->content);
         return $post;
     }
-    function getContentToEdit(){
+    function getContentToEdit($post=0){
         define('VE_GET_CONTENT_TO_EDIT',true);
-        $post = $this->getPost();
+        if(!$post) {
+            $post = $this->getPost();
+        }
         $content = apply_filters( 've_get_content_to_edit', $post->post_content );
         $not_shortcodes = preg_split( '/' . self::getShortCodeRegex() . '/', $content );
         $non_sc_replace=vsprintf('[%1$s][%2$s width="1/1"][%3$s]$1[/%3$s][/%2$s][/%1$s]',$this->base_elements);
@@ -333,12 +285,7 @@ class VE_Editor extends VE_Manager_Abstract{
                 $content = preg_replace( "/(" . preg_quote( $string, '/' ) . "(?!\[\/))/", $non_sc_replace, $content );
             }
         }
-
-        // Preg replace <script> tag with placeholder not to call scripts once it called.
-        $pattern = array('/\<script([^\>]*)\>/', '/\<\/script([^\>]*)\>/');
-        $replace = array('<style$1>/** ve_js-placeholder **/', '</style$1><!-- ve_js-placeholder -->');
-        echo $this->do_shortcode($content);
-        //echo$this->parseShortcodesString( $content );die;
+        return $this->do_shortcode($content);
     }
     function get_element_scripts(){
         if($this->element_scripts){
@@ -475,47 +422,52 @@ class VE_Editor extends VE_Manager_Abstract{
     }
 
 
-    function buildPage(){
-        //add_action( 'admin_bar_menu', array( &$this, "adminBarEditLink" ), 1000 );
-        //add_filter( 'edit_post_link', array( &$this, 'editPostLink' ) );
-        add_filter( 'get_edit_post_link', array( &$this, 'editPostLink' ) );
-    }
-
     function setEditorTitle( $admin_title ) {
         return sprintf( __( 'Edit %s with Visual Editor', 'visual_editor' ), $this->post_type->labels->singular_name );
     }
-    function editPostLink( $link ) {
-        if ( $this->canUseEditor() ) {
-            return $this->getEditUrl();
+    function editPostLink( $link,$id=0 ) {
+        if ( $this->canUseEditor($id) ) {
+            return $this->getEditUrl($id);
         }
-
         return $link;
     }
     function containerAnchor(){
         return '<span class="ve_container_anchor"></span>';
     }
-    function adminBarEditLink( $wp_admin_bar ) {
-        global $wp_admin_bar;
-        if ( is_singular() ) {
-            if ( $this->canUseEditor( get_the_ID() ) ) {
-                $wp_admin_bar->add_menu( array(
-                    // 'parent' => $root_menu,
-                    'id' => 've_inline-admin-bar-link',
-                    'title' => __( 'Edit with Visual Editor', "visual_editor" ),
-                    'href' => $this->getEditUrl(),
-                    'meta' => array( 'class' => 've_inline-link' )
-                ) );
-            }
-        }
-    }
-    function getAllElements(){
-        $elements=$this->elementManager->getElements();
 
+    function getAllElements($with_custom=true){
+        $elements=$this->elementManager->getElements();
         $elements_settings=array();
         foreach($elements as $e){
             $elements_settings[$e->id_base]=$e->get_settings();
         }
-        
+        if($with_custom) {
+            $custom_element='ve_custom';
+            $config=$this->getVeManager()->get('config');
+            if(!empty($config['custom_element'])){
+                $custom_element=$config['custom_element'];
+            }
+            $the_custom_element = $elements[$custom_element];
+            unset($elements_settings[$custom_element]);
+            $custom_elements = $this->getVeManager()->getPostManager()->getElements(array('posts_per_page' => -1));
+
+            if ($the_custom_element instanceof Ve_Element) {
+                foreach ($custom_elements as $id => $custom_element) {
+                    $settings = $the_custom_element->get_settings();
+                    if ($custom_element->post_title) {
+                        $settings['name'] = $custom_element->post_title;
+                    }
+                    if ($custom_element->icon_class) {
+                        $settings['icon_class'] = $custom_element->icon_class;
+                    }
+                    $params = array('content' => base64_encode($custom_element->post_content));
+                    $settings['params'] = json_encode($params);
+                    $settings['group']='custom';
+                    $id_base = $the_custom_element->id_base . '-' . $id;
+                    $elements_settings[$id_base] = $settings;
+                }
+            }
+        }
         return $elements_settings;
     }
     function render($tpl,$data=array()){
@@ -529,6 +481,12 @@ class VE_Editor extends VE_Manager_Abstract{
     }
     function isTemplate($post=''){
         return $this->isPostType('template',$post);
+    }
+    function isPage($post=''){
+        return $this->isPostType('page',$post);
+    }
+    function isElement($post=''){
+        return $this->isPostType('element',$post);
     }
     function isPostType($type,$post=''){
         if(!$post){

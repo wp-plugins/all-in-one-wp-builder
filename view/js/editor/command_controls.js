@@ -90,6 +90,17 @@
             }
 
         },
+        layoutAction:function(cmd){
+            var element=cmd.get('element');
+            ve.dialog.show('#ve_row-layout-dialog',element);
+        },
+        loadTemplateAction:function(cmd){
+            var target=$(cmd.get('element')),
+                template=target.data('template');
+            if(template){
+                ve.the_editor.buildFromTemplate(template);
+            }
+        },
         copyAction:function(cmd){
             ve.clipboard.push(cmd.clone());
         },
@@ -136,6 +147,9 @@
         addAction:function(cmd){
 
             var from=ve.getElementSetting(cmd.get('from'));
+            if(cmd.get('params')){
+                from.defaults=cmd.get('params');
+            }
             var to=ve.getElementById(cmd.get('to'));
             ve.log(from.id_base+'->'+cmd.get('to'));
             var editor=new ve.Editor();

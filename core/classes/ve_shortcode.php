@@ -1,12 +1,45 @@
 <?php
 class VE_ShortCode extends VE_Manager_Abstract{
     var $post_ids=array();
+    /**
+     * @var VE_View_Manager
+     */
+    var $viewManager;
     function _construct(){
         $this->set('widget','ve_widget');
         $this->set('popup','ve_popup');
+        $this->viewManager=$this->getVeManager()->getViewManager();
+
     }
     function bootstrap(){
         $this->addShortCodes();
+        add_action('current_screen',array($this,'setupTinyMce'));
+    }
+    function setupTinyMce($current_screen){
+        if(ve_is_editor()){
+            return false;
+        }
+        //$this->configureShortCodeEditor();
+    }
+    function configureShortCodeEditor(){
+        // add new buttons
+        $register_buttons=function ($buttons) {
+            array_push($buttons, 've_popup', 've_widget');
+            return $buttons;
+        };
+        add_filter('mce_buttons', $register_buttons);
+
+
+        $register_tinymce_javascript=function($plugin_array) {
+            $plugin_array['ve_shortcodes'] = ve_resource_url(VE_VIEW.'/js/tinymce/plugins/widget-popup-plugin.js');
+            return $plugin_array;
+        };
+        add_filter('mce_external_plugins', $register_tinymce_javascript);
+
+        add_action('after_wp_tiny_mce',array($this,'widget_popup_dialog'));
+    }
+    function widget_popup_dialog(){
+        $this->viewManager->render('tinymce/widget_popup_dialog');
     }
     function addShortCodes(){
         add_shortcode($this->get('widget'),array($this,'renderWidget'));

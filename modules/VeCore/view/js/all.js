@@ -3,15 +3,15 @@
  */
 (function($){
     $('.ve_color-control').wpColorPicker();
-    $('.gallery_widget_attached_images_list').each(function (index) {
+    $('.ve-media-selected-images-list').each(function (index) {
         var $img_ul = $(this);
-        var $block=$img_ul.closest('.edit_form_line');
-        var $hiddenInput=$('.gallery_widget_attached_images_ids',$block);
-        var $addButton=$('.gallery_widget_add_images',$block);
+        var $block=$img_ul.closest('.ve_input_block');
+        var $hiddenInput=$('.ve-media-selected-images-ids',$block);
+        var $addButton=$('.ve-media-add-images-btn',$block);
         if($addButton.data('multiple')) {
             $img_ul.sortable({
                 forcePlaceholderSize: true,
-                placeholder: "widgets-placeholder-gallery",
+                placeholder: "ve-media-images-placeholder",
                 cursor: "move",
                 items: "li",
                 update: function () {

@@ -82,9 +82,6 @@
   cursor: pointer;
   float: left;
 }
-.ve_selected.ve_element-ve_row .ve_row {
-  box-shadow: inset 0px 0px 0 2000px rgba(0, 0, 0, 0.1);
-}
 .ve_selected.ve_element-ve_col {
   outline: 1px dashed red !important;
 }

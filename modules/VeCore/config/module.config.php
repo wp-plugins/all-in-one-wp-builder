@@ -42,6 +42,7 @@ return array(
 
             'VeWpSearch',
             'VeWpTagCloud',
+            'VeCustom',
         ),
     ),
     'features'=>array(

@@ -112,13 +112,13 @@ class Ve_Feature_Abstract{
     function _construct(){
 
     }
-    function _init(){
+    function _init($element){
         $class=get_class($this);
         if(!isset(self::$init[$class])){
             self::$init[$class]=true;
-            $this->init();
             $this->init_once();
         }
+        $this->init($element);
     }
     function init(){
 

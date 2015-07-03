@@ -7,16 +7,20 @@ class VE_Widget_ShortCode{
 	 * @var string
 	 */
 	public $shortcode_tag = 've_widget';
+    /**
+     * @var Ve_Manager
+     */
+    public $veManager;
 
 	/**
 	 * __construct 
 	 * class constructor will set the needed filter and action hooks
 	 * 
-	 * @param array $args 
+	 * @param Ve_Manager $ve
 	 */
-	function __construct($args = array()){
+	function __construct($ve){
 
-		
+		$this->veManager=$ve;
 		if ( is_admin() ){
 			add_action('admin_head', array( $this, 'admin_head') );
 			add_action( 'admin_enqueue_scripts', array($this , 'admin_enqueue_scripts' ) );
@@ -95,5 +99,6 @@ class VE_Widget_ShortCode{
         <?php
     }
 }//end class
-
-new VE_Widget_ShortCode();
+add_action('ve_init',function($veManager){
+    new VE_Widget_ShortCode($veManager);
+});

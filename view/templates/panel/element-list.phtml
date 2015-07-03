@@ -10,7 +10,7 @@
     $elements=$editor->getAllElements();
     foreach($elements as $e){
         ?>
-        <li class="element-list-item" data-id-base="<?php echo $e['id_base'];?>">
+        <li class="element-list-item" data-id-base="<?php echo $e['id_base'];?>" data-group="<?=isset($e['group'])?$e['group']:'default';?>" data-params='<?=isset($e['params'])?$e['params']:''?>'>
             <div class="ve-element ve_element-<?php echo $e['id_base'];?> tooltip" title="<?php echo $e['name'];?>">
                 <span class="icon"><i class="<?php echo $e['icon_class'];?>"></i></span>
                 <!--     <span class="name"><?php echo $e['name'];?></span> -->
@@ -18,5 +18,6 @@
         </li>
     <?php
     }
+
     ?>
 </ul>

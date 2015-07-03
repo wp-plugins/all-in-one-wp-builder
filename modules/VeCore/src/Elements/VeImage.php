@@ -51,8 +51,8 @@ class VeCore_VeImage extends Ve_Element implements VE_Element_Interface
         $title=$instance['title'];
         $link=$instance['link'];
         $img_id = preg_replace( '/[^\d]/', '', $image );
-        $img = ve_getImageBySize( array( 'attach_id' => $img_id, 'thumb_size' => $img_size, 'class' => $style ) );
-        if ( $img == NULL ) $img['thumbnail'] = '<img class="' . $style  . '" src="' . ve_resource_url( __DIR__.'/../../view/images/no_image.png' ) . '" />'; //' <small>'.__('This is image placeholder, edit your page to replace it.', 'js_composer').'</small>';
+        $img = ve_get_attachment_image( array( 'attach_id' => $img_id, 'thumb_size' => $img_size, 'class' => $style ) );
+        if ( $img == NULL ) $img['thumbnail'] = '<img class="' . $style  . '" src="' . ve_resource_url( __DIR__.'/../../view/images/no_image.png' ) . '" />';
 
         $el_class = $instance['class'];
 
@@ -79,8 +79,6 @@ class VeCore_VeImage extends Ve_Element implements VE_Element_Interface
             if ( ! preg_match( '/^(https?\:\/\/|\/\/)/', $link_to ) ) $link_to = 'http://' . $link_to;
         }
         $img_link_target=$instance['img_link_target'];
-//to disable relative links uncomment this..
-
 
         $img_output = ( $style == 've_box_shadow_3d' ) ? '<span class="ve_box_shadow_3d_wrap">' . $img['thumbnail'] . '</span>' : $img['thumbnail'];
         $image_string = ! empty( $link_to ) ? '<a' . $a_class . ' href="' . $link_to . '"' . ' target="' . $img_link_target . '"'. '>' . $img_output . '</a>' : $img_output;
@@ -158,18 +156,18 @@ class VeCore_VeImage extends Ve_Element implements VE_Element_Interface
         );
         ?>
         <p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></p>
-        <div class="edit_form_line">
+        <div class="ve_input_block">
             <label>Image</label>
-            <input type="hidden" class="gallery_widget_attached_images_ids" name="<?php echo $this->get_field_name('image');?>" value="<?php echo $img_id;?>"/>
-            <div class="gallery_widget_attached_images">
-                <ul class="gallery_widget_attached_images_list">
+            <input type="hidden" class="ve-media-selected-images-ids" name="<?php echo $this->get_field_name('image');?>" value="<?php echo $img_id;?>"/>
+            <div class="ve-media-selected-images">
+                <ul class="ve-media-selected-images-list">
                     <?php echo fieldAttachedImages($img_id);?>
                 </ul>
             </div>
-            <a class="gallery_widget_add_images" href="#" title="Add image">Add image</a>
+            <a class="ve-media-add-images-btn" href="#" title="Add image">Add image</a>
             <div class="ve_clearfix"></div>
         </div>
-        <div class="edit_form_line">
+        <div class="ve_input_block">
             <label for="<?php $this->field_id('css_animation');?>">Css Animation</label>
             <br/>
             <select id="<?php $this->field_id('css_animation');?>" name="<?php $this->field_name('css_animation');?>">
@@ -179,7 +177,7 @@ class VeCore_VeImage extends Ve_Element implements VE_Element_Interface
             </select>
         </div>
 
-        <p class="edit_form_line">
+        <p class="ve_input_block">
             <label for="<?php $this->field_id('img_size');?>">Image size:</label>
             <select name="<?php $this->field_name('img_size');?>" id="<?php $this->field_id('img_size');?>">
                 <?php
@@ -228,7 +226,7 @@ class VeCore_VeImage extends Ve_Element implements VE_Element_Interface
 
         </script>
 
-        <div class="edit_form_line">
+        <div class="ve_input_block">
             <label for="<?php $this->field_id('alignment');?>">Image alignment</label>
             <br/>
             <select id="<?php $this->field_id('alignment');?>" name="<?php $this->field_name('alignment');?>">
@@ -238,7 +236,7 @@ class VeCore_VeImage extends Ve_Element implements VE_Element_Interface
             </select>
         </div>
 
-        <div class="edit_form_line">
+        <div class="ve_input_block">
             <label for="<?php $this->field_id('style');?>">Image style</label>
             <br/>
             <select id="<?php $this->field_id('style');?>" name="<?php $this->field_name('style');?>">

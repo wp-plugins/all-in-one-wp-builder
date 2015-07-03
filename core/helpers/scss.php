@@ -16,7 +16,7 @@ function ve_scssc(){
 /**
  * try to fix some error on custom css, eg missing ;
  * @param $css
- * @return fixed css
+ * @return string fixed css
  *
  */
 function ve_fix_custom_css($css){

@@ -21,6 +21,8 @@ class VE_Manager extends VE_Manager_Abstract{
         $this->set('PopupManager', new VE_Popup_Manager($this));
         $this->set('WidgetManager', new VE_Widget_Manager($this));
         $this->set('ShortCode', new VE_ShortCode($this));
+        $this->set('Admin', new VE_Admin($this));
+        $this->set('ListTable', new VE_List_Table_Manager($this));
         do_action('ve_load',$this);
     }
     function bootstrap(){
@@ -38,6 +40,8 @@ class VE_Manager extends VE_Manager_Abstract{
         $this->get('PopupManager')->bootstrap($this);
         $this->get('WidgetManager')->bootstrap($this);
         $this->get('ShortCode')->bootstrap($this);
+        $this->get('Admin')->bootstrap($this);
+        $this->get('ListTable')->bootstrap($this);
         //Module bootstrap
         do_action('ve_bootstrap',$this);
         //var_dump($this);
@@ -47,8 +51,13 @@ class VE_Manager extends VE_Manager_Abstract{
         $this->setMode();
         $this->load();
         $this->bootstrap();
+
         /**
-         * Everything done, let configure editor
+         * Everything done, fire init hook
+         */
+        do_action('ve_init',$this);
+        /**
+         * Let configure editor
          */
         $this->configure_editor();
         do_action('ve_run');
@@ -68,7 +77,7 @@ class VE_Manager extends VE_Manager_Abstract{
     protected function setMode() {
         if ( is_admin() ) {
             if ( ve_action() === 've_inline' ) {
-                $this->set('mode', 'admin_frontend_editor');
+                $this->set('mode', 'front_editor');
             }else{
                 $this->set('mode','admin_page');
             }
@@ -146,6 +155,13 @@ class VE_Manager extends VE_Manager_Abstract{
      */
     function getPopupManager(){
         return $this->get('PopupManager');
+    }
+
+    /**
+     * @return VE_List_Table_Manager
+     */
+    function getListTableManager(){
+        return $this->get('ListTable');
     }
 
 }

@@ -6,16 +6,21 @@
 ?>
 <div class="element-form-tabs">
     <ul>
-        <li><a href="#ve-element-primary-feature"><?php echo $this->feature_default_title;?></a></li>
+        <?php if($this->primary_feature_title){?>
+        <li><a href="#ve-element-primary-feature"><?php echo $this->primary_feature_title;?></a></li>
+        <?php }?>
         <?php foreach($this->features as $feature){
         ?>
         <li><a href="#<?php echo $feature->getId();?>"><?php echo $feature->getTitle();?></a></li>
         <?php }?>
     </ul>
-    <div id="ve-element-primary-feature">
-        <?php $this->_form($atts,$content,$args);?>
 
+    <div id="ve-element-primary-feature" <?php if(!$this->primary_feature_title)
+        echo ' style="display:none;"'
+    ?>>
+        <?php $this->_form($atts,$content,$args);?>
     </div>
+
     <?php foreach($this->features as $feature){
     ?>
     <div id="<?php echo $feature->getId();?>">

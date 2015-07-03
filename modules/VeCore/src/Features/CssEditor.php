@@ -7,12 +7,15 @@ class VeCore_CssEditor extends Ve_Feature_Abstract{
 
     function _construct(){
         $this->setTitle('Style');
-        //die('hehe');
+    }
+    function init_once(){
+        $resource=$this->getElement()->getVeManager()->getResourceManager();
+        $resource->addEditorCss('wp-color-picker')
+            ->addEditorJs('wp-color-picker');
+        $this->enqueue_script('css-editor',ve_resource_url( __DIR__.'/../../view/js/css_editor.js' ));
     }
     function update($instance){
-        //$this->getElement()->css('background','red');
         if($instance) {
-            //print_r($instance);
             foreach ($instance as $style_name => $val) {
                 if(!$this->is_valid_style($style_name)){
                     continue;
@@ -61,15 +64,6 @@ class VeCore_CssEditor extends Ve_Feature_Abstract{
         return false;
     }
 
-    function init_once(){
-        $resource=$this->getElement()->getVeManager()->getResourceManager();
-        $resource->addEditorCss('wp-color-picker')
-            ->addEditorJs('wp-color-picker');
-        $this->enqueue_script('css-editor',ve_resource_url( __DIR__.'/../../view/js/css_editor.js' ));
-    }
-
-
-    // }}
     function form($instance) {
         $output = '<div class="ve_css-editor ve_row" data-css-editor="true">';
         $output .= $this->onionLayout();
@@ -81,8 +75,6 @@ class VeCore_CssEditor extends Ve_Feature_Abstract{
             . '    <div class="color-group"><input type="text" name="background_color" value="'.$this->get_field_value('background_color').'" class="ve_color-control"></div>'
             . '    <div class="ve_background-image">' . $this->getBackgroundImageControl() . '<div class="ve_clearfix"></div></div>'
             . '    <div class="ve_background-style"><select name="background_style" class="ve_background-style">' . $this->getBackgroundStyleOptions() . '</select></div>'
-            . '    <label>' . __( 'Box controls', 'visual_editor' ) . '</label>'
-            . '    <label class="ve_checkbox" style="display:none;"><input type="checkbox" name="simply" class="ve_simplify" value=""> ' . __( 'Simplify controls', 'visual_editor' ) . '</label>'
             . '</div>';
         $output .= '';
         $output .= '</div><div class="ve_clearfix"></div>';
@@ -95,14 +87,14 @@ class VeCore_CssEditor extends Ve_Feature_Abstract{
         $img_ids=$this->get_field_value('background_image');
         ob_start();
         ?>
-        <div class="edit_form_line">
-            <input type="hidden" class="gallery_widget_attached_images_ids" name="<?php echo $this->get_field_name('background_image');?>" value="<?php echo $img_ids;?>"/>
-            <div class="gallery_widget_attached_images">
-                <ul class="gallery_widget_attached_images_list">
+        <div class="ve_input_block">
+            <input type="hidden" class="ve-media-selected-images-ids" name="<?php echo $this->get_field_name('background_image');?>" value="<?php echo $img_ids;?>"/>
+            <div class="ve-media-selected-images">
+                <ul class="ve-media-selected-images-list">
                     <?php echo fieldAttachedImages(explode(',',$img_ids));?>
                 </ul>
             </div>
-            <a class="gallery_widget_add_images" href="#" title="Add image">Add image</a>
+            <a class="ve-media-add-images-btn" href="#" title="Add image">Add image</a>
         </div>
         <?php
         return ob_get_clean();
@@ -126,7 +118,7 @@ class VeCore_CssEditor extends Ve_Feature_Abstract{
             __( 'Repeat', 'visual_editor' ) => 'repeat'
         );
         foreach ( $styles as $name => $style ) {
-            $output .= '<option value="' . $style . '"'.selected($style,$this->get_field_value('background_style')).'>' . $name . '</option>';
+            $output .= '<option value="' . $style . '"'.selected($style,$this->get_field_value('background_style'),false).'>' . $name . '</option>';
         }
         return $output;
     }
@@ -135,6 +127,7 @@ class VeCore_CssEditor extends Ve_Feature_Abstract{
         $output = '<div class="ve_layout-onion ve_col-xs-7">'
             . '    <div class="ve_margin">' . $this->layerControls( 'margin' )
             . '      <div class="ve_border">' . $this->layerControls( 'border', 'width' )
+                . $this->borderRadiusControl()
             . '          <div class="ve_padding">' . $this->layerControls( 'padding' )
             . '              <div class="ve_content"><i></i></div>'
             . '          </div>'
@@ -143,7 +136,29 @@ class VeCore_CssEditor extends Ve_Feature_Abstract{
             . '</div>';
         return $output;
     }
-
+    protected function borderRadiusControl(){
+        $output='';
+        for($i=0;$i<4;$i++){
+            $field_name='';
+            switch($i){
+                case 0:
+                    $field_name='top_left';
+                    break;
+                case 1:
+                    $field_name='top_right';
+                    break;
+                case 2:
+                    $field_name='bottom_right';
+                    break;
+                case 3:
+                    $field_name='bottom_left';
+                    break;
+            }
+            $field_name='border_'.$field_name.'_radius';
+            $output.=sprintf('<input type="text" name="%s" value="%s" class="%s"/>',$this->get_field_name($field_name),$this->get_field_value($field_name),'border-radius-'.$i);
+        }
+        return $output;
+    }
     protected function layerControls( $name, $prefix = '' ) {
         $output = '<label>' . __( $name, 'visual_editor' ) . '</label>';
 

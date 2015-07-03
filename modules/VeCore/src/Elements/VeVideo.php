@@ -21,8 +21,8 @@ class VeCore_VeVideo extends Ve_Element implements VE_Element_Interface{
         $title=$link=$class='';
         extract( shortcode_atts( array(
             'title' => '',
-            'link' => 'https://www.youtube.com/watch?v=mWRsgZuwf_8',
-            'size' => ( isset( $content_width ) ) ? $content_width : 300,
+            'link' => 'http://vimeo.com/92033601',
+            'size' => ( isset( $content_width ) ) ? $content_width : 500,
             'class' => '',
             'css' => ''
 
@@ -30,7 +30,7 @@ class VeCore_VeVideo extends Ve_Element implements VE_Element_Interface{
 
         $this->addClass($class);
 
-        $video_w = ( isset( $content_width ) ) ? $content_width : 300;
+        $video_w = ( isset( $content_width ) ) ? $content_width : 500;
         $video_h = $video_w / 1.61; //1.61 golden ratio
         global $wp_embed;
         /**
@@ -40,6 +40,7 @@ class VeCore_VeVideo extends Ve_Element implements VE_Element_Interface{
         $embed = $wp_embed->run_shortcode( '[embed width="' . $video_w . '"' . $video_h . ']' . $link . '[/embed]' );
         //echo $embed;die;
         $this->element_title($title);
+        $embed=sprintf('<div class="video-container">%s</div>',$embed);
         $this->element_content($embed);
 
 

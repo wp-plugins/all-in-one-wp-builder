@@ -6,7 +6,7 @@ class VeCore_VeCol extends Ve_Element implements VE_Element_Interface{
         $options=array(
             'title'=>'VE Column',
             'description'=>'Row description',
-            'icon_class'=>"fa fa-columns",
+            'icon_class'=>"fa fa-th-large",
             'container'=>true,
             'container_element'=>true,//can contain element directly
             'lv'=>2,

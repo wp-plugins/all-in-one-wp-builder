@@ -198,7 +198,7 @@ var md5=md5||ve.php.md5;
                 $('head').append(iframe.$elementStyle);
             }
         }
-        iframe.$elementStyle.append(style);
+        style&&iframe.$elementStyle.append(style);
 
     };
     iframe.loadScripts = function() {

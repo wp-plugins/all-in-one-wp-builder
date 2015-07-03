@@ -5,16 +5,14 @@ return array(
         'VeCore',
     ),
     'view_manager'=>array(
-        'template_map'=>array(
-
-        ),
+        'template_map'=> include __DIR__ .'/template.map.php',
         'template_base_dir'=>__DIR__.'/../view/templates',
         'template_ext'=>'phtml',
     ),
     'resources'=>array(
         'reset'=>array(
             'css'=>array(
-                array('reset',__DIR__.'/../view/css/reset.css'), //__DIR__.'/../view/css/editor/fa.css'
+                array('reset',__DIR__.'/../view/css/reset.css'),
             ),
         ),
         'bootstraps'=>array(
@@ -28,12 +26,21 @@ return array(
 
             ),
         ),
+        'icon'=>array(
+            'css'=>array(
+                array('font-awesome',__DIR__.'/../view/libraries/font-awesome/css/font-awesome.min.css')
+            ),
+            'eCss'=>array(
+                array('font-awesome',__DIR__.'/../view/libraries/font-awesome/css/font-awesome.min.css')
+            ),
+
+        ),
         'front'=>array(
             'frontJs'=>array(
                 //array('front',__DIR__.'/../view/js/ve_front.js','jquery'),
             ),
             'frontCss'=>array(
-                array('font-awesome',__DIR__.'/../view/css/editor/fa/css/font-awesome.min.css')
+
             )
         ),
         'editor'=>array(
@@ -43,15 +50,15 @@ return array(
                 array('ve_jquery_ui',__DIR__.'/../view/libraries/jquery-ui/jquery-ui.css'),
                 array('select2',__DIR__.'/../view/libraries/select2/css/select2.min.css',array(),VE_VERSION),
                 array('editor',__DIR__.'/../view/css/editor/editor.css'),
-                array('font-awesome',__DIR__.'/../view/css/editor/fa/css/font-awesome.min.css'),
                 array('tooltipster',__DIR__.'/../view/css/tooltipster.css'),
-                array('setting_menu',__DIR__.'/../view/css/setting_menu.css'),
 
             ),
             'eJs'=>array(
                 array('select2',__DIR__.'/../view/libraries/select2/js/select2.min.js',array(),VE_VERSION),
+                array('slimscroll-scroll',__DIR__.'/../view/libraries/scroller/jquery.slimscroll.min.js',array(),VE_VERSION),
                 array('ve_phpjs',__DIR__.'/../view/libraries/phpjs/phpjs.js',array(),VE_VERSION),
                 array('ve_jqueryserializeobject',__DIR__.'/../view/libraries/jquery.serialize-object.js',array(),VE_VERSION),
+                array('sass',__DIR__.'/../view/libraries/sass/sass.js',array(),true),
                 array('tooltipster',__DIR__.'/../view/js/jquery.tooltipster.min.js','jquery'),
                 array('ve_define',__DIR__.'/../view/js/editor/ve_define.js',
                     array(
@@ -63,7 +70,7 @@ return array(
                         'jquery-ui-dialog',
                         'jquery-ui-tabs',
                         //'ve_phpjs',
-                    ),VE_VERSION,true),
+                    ),VE_VERSION,false),
 
                 array('ve',__DIR__.'/../view/js/editor/ve.js',array('ve_define'),VE_VERSION,true),
                 array('ve_command_controls',__DIR__.'/../view/js/editor/command_controls.js',array('ve_define'),VE_VERSION,true),
@@ -74,14 +81,17 @@ return array(
                 array('media_editor',__DIR__.'/../view/js/editor/media-editor.js',array('ve_define'),VE_VERSION,true),
                 array('ve_editor_views',__DIR__.'/../view/js/editor/editor_views.js',array('ve_define'),VE_VERSION,true),
                 array('ve_panel_views',__DIR__.'/../view/js/editor/panel.js',array('ve_define'),VE_VERSION,true),
+                array('ve_topbar_views',__DIR__.'/../view/js/editor/topbar.js',array('ve_define'),VE_VERSION,true),
+                array('ve_dialog',__DIR__.'/../view/js/editor/dialog.js',array('ve_define'),VE_VERSION,true),
                 array('ve_custom_css',__DIR__.'/../view/js/editor/custom_css.js',array('ve_define'),VE_VERSION,true),
                 array('ve_load',__DIR__.'/../view/js/editor/load.js',array('ve_define'),VE_VERSION,true),
+                array('list_post',__DIR__.'/../view/js/editor/list-post.js',array('ve_define'),VE_VERSION,true),
             ),
             'fCss'=>array(
                 array('ve_iframe',__DIR__.'/../view/css/editor/iframe.css'),
                 array('ve_jquery_ui',__DIR__.'/../view/libraries/jquery-ui/jquery-ui.css'),
                 array('ve_menu_context',__DIR__.'/../view/libraries/context-menu/src/jquery.contextMenu.css'),
-                array('font-awesome', __DIR__.'/../view/css/editor/fa/css/font-awesome.min.css' ),
+                array('font-awesome',"http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"),
 
             ),
             'fJs'=>array(
@@ -97,8 +107,13 @@ return array(
         'page'=>array(
             'js'=>array(),
             'css'=>array(
+                array('global',__DIR__.'/../view/css/global.css'),
                 array('ve-style',__DIR__.'/../view/css/style.css'),
             ),
+            'eCss'=>array(
+                array('global',__DIR__.'/../view/css/global.css'),
+            ),
+
         )
     )
 );

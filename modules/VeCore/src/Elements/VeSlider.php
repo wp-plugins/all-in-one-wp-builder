@@ -42,8 +42,6 @@ class VeCore_VeSlider extends Ve_Element implements VE_Element_Interface{
         $interval=$instance['interval'];
         $this->addClass($instance['class']);
         $gal_images = '';
-        $link_start = '';
-        $link_end = '';
         $el_start = '';
         $el_end = '';
         $slides_wrap_start = '';
@@ -104,7 +102,7 @@ class VeCore_VeSlider extends Ve_Element implements VE_Element_Interface{
         foreach ( $images as $attach_id ) {
             $i ++;
             if ( $attach_id > 0 ) {
-                $post_thumbnail = ve_getImageBySize( array( 'attach_id' => $attach_id, 'thumb_size' => $img_size ) );
+                $post_thumbnail = ve_get_attachment_image( array( 'attach_id' => $attach_id, 'thumb_size' => $img_size ) );
             } else {
                 $post_thumbnail = array();
                 $post_thumbnail['thumbnail'] = '<img src="' . ve_resource_url( __DIR__.'/../../view/images/no_image.png' ) . '" />';
@@ -165,14 +163,14 @@ class VeCore_VeSlider extends Ve_Element implements VE_Element_Interface{
             '0'=>'Disabled'
         );
         $link_list=array(
-            'link_image'=>__( 'Open prettyPhoto', 'js_composer' ),
-            'link_no'=>__( 'Do nothing', 'js_composer' ) ,
-            'custom_link'=>__( 'Open custom link', 'js_composer' ),
+            'link_image'=>__( 'Open prettyPhoto', 'visual_editor' ),
+            'link_no'=>__( 'Do nothing', 'visual_editor' ) ,
+            'custom_link'=>__( 'Open custom link', 'visual_editor' ),
         );
         ?>
         <p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></p>
         <p>
-            <label for="<?php echo $this->get_field_id('type');?>"><?php _e('Gallery type');?></label>
+            <label for="<?php $this->field_id('type');?>"><?php _e('Gallery type');?></label>
             <select name="<?php echo $this->get_field_name('type');?>" id="<?php $this->field_id('type');?>">
                 <?php foreach($gallery_types as $_type=>$option_title){?>
                     <option value="<?php echo $_type;?>"<?php selected($_type,$type);?>><?php echo $option_title?></option>
@@ -180,25 +178,25 @@ class VeCore_VeSlider extends Ve_Element implements VE_Element_Interface{
             </select>
         </p>
         <p>
-            <label>Auto rotate slides</label>
+            <label for="<?php $this->field_id('interval');?>">Auto rotate slides</label>
             <select name="<?php $this->field_name('interval');?>" id="<?php $this->field_id('interval');?>">
                 <?php foreach($interval_list as $o_value=>$o_title){
                     printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$interval,false),$o_title);
                 }?>
             </select>
         </p>
-        <div class="edit_form_line">
+        <div class="ve_input_block">
             <label>Images</label>
-            <input type="hidden" class="gallery_widget_attached_images_ids" name="<?php echo $this->get_field_name('images');?>" value="<?php echo $img_ids;?>"/>
-            <div class="gallery_widget_attached_images">
-                <ul class="gallery_widget_attached_images_list">
+            <input type="hidden" class="ve-media-selected-images-ids" name="<?php echo $this->get_field_name('images');?>" value="<?php echo $img_ids;?>"/>
+            <div class="ve-media-selected-images">
+                <ul class="ve-media-selected-images-list">
                     <?php echo fieldAttachedImages(explode(',',$img_ids));?>
                 </ul>
             </div>
-            <a class="gallery_widget_add_images" href="#" data-multiple="true" title="Add images">Add images</a>
+            <a class="ve-media-add-images-btn" href="#" data-multiple="true" title="Add images">Add images</a>
             <div class="ve_clearfix"></div>
         </div>
-        <p class="edit_form_line">
+        <p class="ve_input_block">
             <label for="<?php $this->field_id('img_size');?>">Image size:</label>
             <select name="<?php $this->field_name('img_size');?>" id="<?php $this->field_id('img_size');?>">
                 <?php
@@ -222,16 +220,16 @@ class VeCore_VeSlider extends Ve_Element implements VE_Element_Interface{
 
         </p>
         <p>
-            <label>On click</label>
+            <label for="<?php $this->field_id('onclick');?>">On click</label>
             <select id="<?php $this->field_id('onclick');?>" name="<?php $this->field_name('onclick');?>">
                 <?php foreach($link_list as $o_value=>$o_title){
                     printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$onclick,false),$o_title);
                 }?>
             </select>
         </p>
-        <div class="edit_form_line ve_hide" data-show-if="<?php $this->field_id('onclick');?>" data-show-value="custom_link">
+        <div class="ve_input_block ve_hide" data-show-if="<?php $this->field_id('onclick');?>" data-show-value="custom_link">
             <textarea name="<?php $this->field_name('custom_links');?>"><?php echo esc_textarea($instance['custom_links']);?></textarea>
-            <span class="ve_description">Enter links for each slide here. Divide links with linebreaks (Enter) . </span>
+            <span class="ve_description">Enter links for each slide here. Divide links with line breaks (Enter) . </span>
         </div>
         <p><label for="<?php echo $this->get_field_id('class'); ?>"><?php _e('Extra class:'); ?></label> <input class="widefat" id="<?php echo $this->get_field_id('class'); ?>" name="<?php echo $this->get_field_name('class'); ?>" type="text" value="<?php echo $class; ?>" /></p>
         <?php

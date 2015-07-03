@@ -1,6 +1,6 @@
 /* This is the default Tooltipster theme (feel free to modify or duplicate and create multiple themes!): */
 .tooltipster-default {
-	border-radius: 60px;
+	border-radius: 35px;
 	border: none;
 	background: #535150;
 	color: #fff;
@@ -9,9 +9,9 @@
 /* Use this next selector to style things like font-size and line-height: */
 .tooltipster-default .tooltipster-content {
 	font-family: Arial, sans-serif;
-	font-size: 13px;
-	line-height: 14px;
-	padding: 4px 5px;
+	font-size: 14px;
+	line-height: 16px;
+	padding: 8px 10px;
 	overflow: hidden;
 }
 

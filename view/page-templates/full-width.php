@@ -6,11 +6,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <?php
-        wp_head();
-        echo "<title>".get_the_title()."</title>";
-
-    ?>
+    <?php if(!get_theme_support('title-tag')){?>
+    <title><?php wp_title();?></title>
+    <?php }?>
+    <?php wp_head();?>
 </head>
 <body <?php body_class();?>>
 <?php the_post();

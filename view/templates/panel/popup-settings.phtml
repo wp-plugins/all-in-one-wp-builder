@@ -29,188 +29,197 @@ $openOptions=array(
     'open_on_mouse_out'=>'Open when mouse out of page',
     'open_with_delay'=>'Open after page loaded',
 );
+$getBackgroundStyleOptions=function ($current_value) {
+    $output = '<option value="">' . __( 'Theme defaults', 'visual_editor' ) . '</option>';
+    $styles = array(
+        __( "Cover", 'visual_editor' ) => 'cover',
+        __( 'Contain', 'visual_editor' ) => 'contain',
+        __( 'No Repeat', 'visual_editor' ) => 'no-repeat',
+        __( 'Repeat', 'visual_editor' ) => 'repeat'
+    );
+    foreach ( $styles as $name => $style ) {
+        $output .= '<option value="' . $style . '"'.selected($style,$current_value,false).'>' . $name . '</option>';
+    }
+    return $output;
+};
+$poptions = get_post_meta($post->ID,'_ve_poptions',true);
+        if(!is_array($poptions))
+        {
+            $poptions = array();
+        }
 ?>
-<a href="#TB_inline?width=600&height=550&inlineId=ve-popup-settings" title="Popup Settings" class="thickbox">Popup Setting</a>
+<!--<a href="#TB_inline?width=600&height=550&inlineId=ve-popup-settings" title="Popup Settings" class="thickbox">Popup Setting</a>-->
 <div id="ve-popup-settings" class="hidden">
-    <form class="ve-ajax-form ve-popup-settings ui-tabs" data-update-values="1">
+    <form class="ve-ajax-form ve-popup-settings" data-update-values="1">
         <input type="hidden" name="action" value="ve_update_post_meta"/>
-        <ul role="tablist" class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-            <li aria-expanded="true" aria-selected="true" aria-labelledby="ui-id-7" aria-controls="ve-element-primary-feature" tabindex="0" role="tab" class="ui-state-default ui-corner-top ui-tabs-active ui-state-active"><a id="ui-id-7" tabindex="-1" role="presentation" class="ui-tabs-anchor" href="#ve-element-primary-feature">Setting</a></li>
-        </ul>
-        <div class="ui-tabs-panel">
-            <p>
-                <label for="ve_post_title">Popup Title:</label>
-                <input class="widefat" id="ve_post_title" type="text" name="post_title" value="<?php echo esc_attr($editor->post->post_title);?>"/>
-            </p>
-        <p class="ve_row">
-            <label for="position" class="ve_col-sm-3">Popup Position:</label>
-            <select name="position" id="position" class="ve_col-sm-3">
-                <?php foreach($positionOptions as $value=>$title){
-                    printf('<option value="%s"%s>%s</option>',$value,selected($value,$post->position,false),$title);
-                }?>
-            </select>
+        <div class="ve-ui-tabs">
+            <ul>
+                <li><a href="#popup-setting-tab1">Setting</a></li>
+                <li><a href="#popup-setting-tab2">Style</a></li>
+            </ul>
 
-        </p>
-
-        <p class="small-input" data-show-if="appearance" data-show-value="center" data-compare="!=">
-            <strong>Offset:</strong><br/>
-
-            <label for="top">Top:</label>
-            <input class="" type="text" name="top" value="<?php echo esc_attr($post->top);?>">
-
-            <label for="left">Left:</label>
-            <input type="text" name="left" value="<?php echo esc_attr($post->left);?>">
-
-            <label for="bottom">Bottom:</label>
-            <input type="text" name="bottom" value="<?php echo esc_attr($post->bottom);?>">
-
-            <label for="right">Right:</label>
-            <input type="text" name="right" value="<?php echo esc_attr($post->right);?>">
-            <span class="clearfix"></span>
-        </p>
-        <p  class="ve_row">
-            <label for="placement" class="ve_col-sm-3">Placement:</label>
-            <select name="placement" id="placement" class="ve_col-sm-3">
-                <?php foreach($placementOptions as $value=>$title){
-                    printf('<option value="%s"%s>%s</option>',$value,selected($value,$post->placement,false),$title);
-                }?>
-            </select>
-
-        </p>
-        <div class="ve_row" data-show-if="placement" data-show-value="category">
-            <div class="ve_col-sm-12">
-                <label for="popup_category">Category:</label><br>
-                <select id="popup_category" multiple="multiple" name="popup_category[]">
-                    <?php
-                        $categories=get_categories();
-                        foreach($categories as $category){
-                            printf('<option value="%s"%s>%s</option>',$category->term_id,selected(in_array($category->term_id,(array)$post->popup_category),true,false),$category->cat_name.' ('.$category->category_count.')');
-                        }
+            <div id="popup-setting-tab1" class="ui-tabs-panel">
+                <p>
+                    <label for="ve_post_title">Popup Title:</label>
+                    <input class="widefat" id="ve_post_title" type="text" name="post_title" value="<?php echo esc_attr($editor->post->post_title);?>"/>
+                </p>
+                <p class="ve_row">
+<!--                    <label for="position" class="ve_col-sm-3">Popup Options:</label>-->
+                </p>
+                <p class="">
+                <?php foreach($poptions as $option){
+                    $str = $positionOptions[$option['position']] . "_";
+                    $str .= $placementOptions[$option['placement']] . "_";
+                    $str .= $openOptions[$option['open']] ;
                     ?>
-                </select>
-                <script type="text/javascript">
-                    jQuery("#popup_category").select2({
-                        width:"360"
+
+                       <strong><?php echo $str;?></strong><br/>
+
+                <?php } ?>
+                </p>
 
 
-
-                    });
-                </script>
             </div>
-        </div>
+            <div id="popup-setting-tab2" class="">
+                <?php $img_ids=$post->background_image;?>
+                <h2>Overlay:</h2>
+                <div class="ve_row">
+                    <div class="ve_col-sm-12">
 
-        <div class="ve_row" data-show-if="placement" data-show-value="post">
-            <div class="ve_col-sm-12">
-                <label for="popup_post">Post(limit to some post if you want):</label><br>
-                <select id="popup_post" multiple="multiple" name="popup_post[]">
-                    <?php if($post->popup_post){
-                        foreach($post->popup_post as $post_id){
-                            $post=get_post($post_id);
-                            printf('<option value="%s" selected="selected">%s</option>',$post_id,$post->post_title);
+                    </div>
+                    <div class="ve_col-sm-4">
+                        <label>Background:</label>
+                        <div class="color-group">
+                            <input type="text" name="background_color" value="<?php echo $post->background_color;?>" class="ve_color-control">
+                        </div>
+                    </div>
+
+                    <div class="ve_col-sm-4">
+                        <label>Opacity</label>
+                        <div>
+                            <input type="number" step="0.01" name="background_opacity" value="<?php echo $post->background_opacity;?>">
+                        </div>
+                    </div>
+                </div>
+                <div class="ve_row">
+                    <div class="ve_col-sm-4">
+                        <div class="ve_input_block">
+                            <input type="hidden" class="ve-media-selected-images-ids" name="background_image" value="<?php echo $img_ids;?>"/>
+                            <div class="ve-media-selected-images">
+                                <ul class="ve-media-selected-images-list">
+                                    <?php echo fieldAttachedImages(explode(',',$img_ids));?>
+                                </ul>
+                            </div>
+                            <a class="ve-media-add-images-btn" href="#" title="Add image">Add image</a>
+                        </div>
+                    </div>
+                    <div class="ve_col-sm-6">
+                        <div class="ve_background-style" style="margin-top: 20px">
+                            <select name="background_style" class="ve_background-style">
+                                <?php
+                                echo $getBackgroundStyleOptions($post->background_style);
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <?php
+                    $close_btn_styles=array(
+                        'fa-times'=>'times',
+                        'fa-times-circle '=>'times circle',
+                        'fa-times-circle-o'=>'times circle o',
+
+                    );
+                    for($i=3;$i<=17;$i++){
+                        if($i==9){
+                            continue;
                         }
-                    }?>
-                </select>
-                <script type="text/javascript">
-                    jQuery("#popup_post").select2({
-                        width:"360",
-                        ajax: {
-                            url: ajaxurl,
-                            dataType: 'json',
-                            delay: 250,
-                            data: function (params) {
-                                return {
-                                    q: params.term, // search term
-                                    page: params.page,
-                                    action:'ve_suggest',
-                                    type:'post'
-                                };
-                            },
-                            processResults: function (data, page) {
-                                // parse the results into the format expected by Select2.
-                                // since we are using custom formatting functions we do not need to
-                                // alter the remote JSON data
-                                return {
-                                    results: data
-                                };
-                            },
-                            cache: true
-                        },
-                        minimumInputLength: 1
-
-
-
-                    });
-                </script>
-            </div>
-        </div>
-
-        <div class="ve_row" data-show-if="placement" data-show-value="page">
-            <div class="ve_col-sm-12">
-                <label for="popup_page">Page(limit to some page if you want):</label><br>
-                <select id="popup_page" multiple="multiple" name="popup_page[]">
-                    <?php if($post->popup_page){
-                        foreach($post->popup_page as $post_id){
-                            $post=get_post($post_id);
-                            printf('<option value="%s" selected="selected">%s</option>',$post_id,$post->post_title);
+                        if($i<10){
+                            $i='0'.$i;
                         }
-                    }?>
-                </select>
-                <script type="text/javascript">
-                    jQuery("#popup_page").select2({
-                        width:"360",
-                        ajax: {
-                            url: ajaxurl,
-                            dataType: 'json',
-                            delay: 250,
-                            data: function (params) {
-                                return {
-                                    q: params.term, // search term
-                                    page: params.page,
-                                    action:'ve_suggest',
-                                    type:'page'
+                        $close_btn_styles['close-btn-icon-'.$i]='btn '.$i;
+                    }
+                    $close_btn_positions=array(
+                        'right'=>'Right',
+                        'left'=>'Left',
+                    );
+                ?>
+                <h2>Close button:</h2>
+                <div class="ve_row">
+                    <div class="ve_col-sm-4">
+                        <label for="popup-close-btn-style">Button Style:</label>
+                    </div>
+                    <div class="ve_col-sm-6">
+                        <select id="popup-close-btn-style" name="close_btn_style">
+                            <?php
+                            $close_btn_style=$post->close_btn_style;
+                            foreach($close_btn_styles as $o_value=>$o_title){
+                                printf('<option value="%s"%s>%s</option>',$o_value,selected($close_btn_style,$o_value,false),$o_title);
+                            }?>
+                        </select>
+                        <script type="application/javascript">
+                            (function($) {
+                                var formatState=function (state) {
+                                    if (!state.id) {
+                                        return state.text;
+                                    }
+                                    var $state = $(
+                                        '<span><i class="fa ' + state.element.value.toLowerCase() + '"></i> ' + state.text + '</span>'
+                                    );
+                                    return $state;
                                 };
-                            },
-                            processResults: function (data, page) {
-                                // parse the results into the format expected by Select2.
-                                // since we are using custom formatting functions we do not need to
-                                // alter the remote JSON data
-                                return {
-                                    results: data
-                                };
-                            },
-                            cache: true
-                        },
-                        minimumInputLength: 1
+                                $("#popup-close-btn-style").select2({
+                                    width:300,
+                                    templateResult: formatState,
+                                    templateSelection: formatState
+                                });
+                            })(jQuery);
+                        </script>
+                    </div>
+                </div>
+                <div class="ve_row">
+                    <div class="ve_col-sm-4">
+                        <label>Position:</label>
+                    </div>
+                    <div class="ve_col-sm-4">
+                        <select name="close_btn_position">
+                            <?php
+                                $close_btn_position=$post->close_btn_position;
+                                if(!$close_btn_position){
+                                    $close_btn_position='right';
+                                }
+                                foreach($close_btn_positions as $o_value=>$o_title){
+                                    printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$close_btn_position,false),$o_title);
+                                }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <p class="small-input">
+                    <strong>Offset:</strong><br/>
 
+                    <label for="top">Top:</label>
+                    <input class="" type="text" name="close_btn_top" value="<?php echo esc_attr($post->close_btn_top);?>">
 
+                    <label for="left">Left:</label>
+                    <input type="text" name="close_btn_left" value="<?php echo esc_attr($post->close_btn_left);?>">
 
-                    });
-                </script>
+                    <label for="bottom">Bottom:</label>
+                    <input type="text" name="close_btn_bottom" value="<?php echo esc_attr($post->close_btn_bottom);?>">
+
+                    <label for="right">Right:</label>
+                    <input type="text" name="close_btn_right" value="<?php echo esc_attr($post->close_btn_right);?>">
+                    <span class="clearfix"></span>
+                </p>
             </div>
         </div>
 
-
-        <span class="clearfix"></span>
-
-
-        <span class="clearfix"></span>
-        <p class="ve_row">
-            <label for="open" class="ve_col-sm-4">Popup Open:</label>
-            <select name="open" id="open" class="ve_col-sm-4">
-                <?php foreach($openOptions as $value=>$title){
-                    printf('<option value="%s"%s>%s</option>',$value,selected($value,$post->open,false),$title);
-                }?>
-            </select>
-
-        </p>
-        <div class="ve_row" data-show-if="open" data-show-value="open_with_delay">
-            <label class="ve_col-sm-4" for="delay">Delay timer(in second):</label>
-            <input class="ve_col-sm-4" type="number" name="delay" id="delay" value="<?php echo absint($post->delay);?>"/>
-        </div>
-            </div>
         <p class="form-control submit">
             <input type="submit" value="Update" class="save"/>
         </p>
+
 
     </form>
 </div>

@@ -3,33 +3,65 @@ class VE_Font_Manager extends VE_Manager_Abstract{
     public $fontDataFile;
     function _construct(){
         $this->fontDataFile=VE_CORE.'/data/allfonts.json';
-        $this->addFonts(array(
-            'Open Sans',
-            'Josefin Slab',
-            'Arvo',
-            'Lato',
-            'Vollkorn',
-            'Abril Fatface',
-            'Ubuntu',
-            'Old Standard TT',
-            'Droid Sans',
-            'Anivers',
-            'Junction',
-            'Fertigo',
-            'Aller',
-            'Audimat',
-            'Delicious',
-            'Prociono',
-            'Fontin',
-            'Fontin-Sans',
-            'Chunkfive',
-        ));
-    }
-    function bootstrap(){
-        $this->getAvailableFonts();
-        $this->setup();
     }
 
+    function bootstrap(){
+        $this->handleAdminUpdate();
+        $this->init();
+        $this->setup();
+    }
+    function init(){
+        if(false!==$fonts=get_option('ve_selected_fonts')){
+            $this->addFonts($fonts);
+        }else{
+            $this->addFonts(array(
+                'Open Sans',
+                'Josefin Slab',
+                'Arvo',
+                'Lato',
+                'Vollkorn',
+                'Abril Fatface',
+                'Ubuntu',
+                'Old Standard TT',
+                'Droid Sans',
+                'Anivers',
+                'Junction',
+                'Fertigo',
+                'Aller',
+                'Audimat',
+                'Delicious',
+                'Prociono',
+                'Fontin',
+                'Fontin-Sans',
+                'Chunkfive',
+            ));
+        }
+    }
+    function handleAdminUpdate(){
+        if(isset($_POST['ve-action'])&&$_POST['ve-action']=='update-fonts'&&isset($_POST['ve-fonts'])){
+            $fonts=$_POST['ve-fonts'];
+            update_option('ve_selected_fonts',$fonts);
+        }
+    }
+    function adminPage(){
+        $availableFonts=$this->getAvailableFonts();
+        ?>
+        <div class="wrap">
+        <h2>Ve Fonts</h2>
+        <form method="post" action="">
+            <input type="hidden" name="ve-action" value="update-fonts"/>
+            <p>Select fonts:</p>
+            <?php foreach($availableFonts as $font){?>
+                <label style="width: 19%;display: inline-block"><input type="checkbox" name="ve-fonts[]" value="<?php echo $font?>"<?php checked(in_array($font,$this->getFonts()));?>/> <?php echo $font;?></label>
+            <?php }?>
+            <p class="submit">
+                <input id="submit" class="button button-primary" type="submit" value="Save Changes" name="submit">
+            </p>
+        </form>
+        </div>
+
+        <?php
+    }
 
 
     function setup(){
@@ -123,7 +155,7 @@ class VE_Font_Manager extends VE_Manager_Abstract{
                 }
             }
         }
-        return $fonts;
+        return $fontNames;
     }
     function getFontsData(){
         if($this->fontDataFile){

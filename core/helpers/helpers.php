@@ -41,10 +41,13 @@ function ve_mode(){
     return ve_manager()->getMode();
 }
 function ve_is_editor(){
-    return ve_mode()=='admin_frontend_editor';
+    return ve_mode()=='front_editor';
 }
 function ve_is_iframe(){
     return ve_mode()=='ve_iframe';
+}
+function is_ve(){
+    return ve_is_editor() || ve_is_iframe();
 }
 function ve_scandir( $path, $extensions = null, $depth = 0, $relative_path = '' ) {
     if ( ! is_dir( $path ) )
@@ -155,4 +158,20 @@ function ve_class_string($classes){
         $classes=join(' ',$classes);
     }
     return $classes;
+}
+function ve_hex2rgb($hex) {
+    $hex = str_replace("#", "", $hex);
+
+    if(strlen($hex) == 3) {
+        $r = hexdec(substr($hex,0,1).substr($hex,0,1));
+        $g = hexdec(substr($hex,1,1).substr($hex,1,1));
+        $b = hexdec(substr($hex,2,1).substr($hex,2,1));
+    } else {
+        $r = hexdec(substr($hex,0,2));
+        $g = hexdec(substr($hex,2,2));
+        $b = hexdec(substr($hex,4,2));
+    }
+    $rgb = array($r, $g, $b);
+    //return implode(",", $rgb); // returns the rgb values separated by commas
+    return $rgb; // returns an array with the rgb values
 }

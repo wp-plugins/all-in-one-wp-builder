@@ -95,9 +95,9 @@
         $ve_editor_element:null,
         setupButton:function($wrapper){
 
-            $wrapper.find('.gallery_widget_add_images').each(function(){
+            $wrapper.find('.ve-media-add-images-btn').each(function(){
                 var $button=$(this),
-                    $block=$button.closest('.edit_form_line');
+                    $block=$button.closest('.ve_input_block');
                 var img_ids = [];
                 $block.find('.added img').each(function () {
                     img_ids.push($(this).attr("rel"));
@@ -117,19 +117,19 @@
         },
         getData:function () {
             var $button = media.ve_editor.$ve_editor_element,
-                $block = $button.closest('.edit_form_line'),
-                $hidden_ids = $block.find('.gallery_widget_attached_images_ids');
+                $block = $button.closest('.ve_input_block'),
+                $hidden_ids = $block.find('.ve-media-selected-images-ids');
             return $hidden_ids.val();
         },
         insert:function (images) {
             var $button = media.ve_editor.$ve_editor_element,
-                $block = $button.closest('.edit_form_line'),
-                $hidden_ids = $block.find('.gallery_widget_attached_images_ids'),
-                $img_ul = $block.find('.gallery_widget_attached_images_list'),
+                $block = $button.closest('.ve_input_block'),
+                $hidden_ids = $block.find('.ve-media-selected-images-ids'),
+                $img_ul = $block.find('.ve-media-selected-images-list'),
                 $thumbnails_string = '';
 
             _.each(images, function (image) {
-                $thumbnails_string += _.template($('#ve_settings-image-block').html(), image);
+                $thumbnails_string += _.template($('#ve_template_block-image').html(), image);
             });
             this.setButtonClass($button,images&&images.length,images);
             $hidden_ids.val(_.map(images,function (image) {
@@ -183,7 +183,7 @@
         },
         init:function () {
             var body=$('body');
-            body.on('click.veGalleryWidget', '.gallery_widget_add_images', function (event) {
+            body.on('click.veGalleryWidget', '.ve-media-add-images-btn', function (event) {
                 var $this = $(this),
                     editor = 've',
                     suffix='',
@@ -205,10 +205,10 @@
                 $this.blur();
                 media.ve_editor.open(editor,options);
             });
-            body.on('click.removeImage', '.gallery_widget_attached_images_list a.icon-remove', function(e){
+            body.on('click.removeImage', '.ve-media-selected-images-list a.icon-remove', function(e){
                 e.preventDefault();
-                var $block = $(this).closest('.edit_form_line'),
-                    $button=$block.find('.gallery_widget_add_images');
+                var $block = $(this).closest('.ve_input_block'),
+                    $button=$block.find('.ve-media-add-images-btn');
                 $(this).parent().remove();
                 var img_ids = [];
                 $block.find('.added img').each(function () {
@@ -216,7 +216,7 @@
                 });
 
                 media.ve_editor.setButtonClass($button,img_ids&&img_ids.length,img_ids);
-                $block.find('.gallery_widget_attached_images_ids').val(img_ids.join(',')).trigger('change');
+                $block.find('.ve-media-selected-images-ids').val(img_ids.join(',')).trigger('change');
             });
         }
     });

@@ -16,6 +16,7 @@ var ve_front=ve_front||{};
             var href=button.data('href');
             var target=button.data('target')||'_self';
             var popup=button.data('popup');
+            var ve_popup=ve_popup||false;
             if(!link){
                 return ;
             }

@@ -48,7 +48,7 @@ $poptions = get_post_meta($post->ID,'_ve_poptions',true);
             $poptions = array();
         }
 ?>
-<!--<a href="#TB_inline?width=600&height=550&inlineId=ve-popup-settings" title="Popup Settings" class="thickbox">Popup Setting</a>-->
+<a href="#TB_inline?width=600&height=550&inlineId=ve-popup-settings" title="Popup Settings" class="thickbox">Popup Setting</a>
 <div id="ve-popup-settings" class="hidden">
     <form class="ve-ajax-form ve-popup-settings" data-update-values="1">
         <input type="hidden" name="action" value="ve_update_post_meta"/>
@@ -64,7 +64,7 @@ $poptions = get_post_meta($post->ID,'_ve_poptions',true);
                     <input class="widefat" id="ve_post_title" type="text" name="post_title" value="<?php echo esc_attr($editor->post->post_title);?>"/>
                 </p>
                 <p class="ve_row">
-<!--                    <label for="position" class="ve_col-sm-3">Popup Options:</label>-->
+                    <label for="position" class="ve_col-sm-3">Popup Options:</label>
                 </p>
                 <p class="">
                 <?php foreach($poptions as $option){

@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: Visual Editor
+Plugin Name: AIO WP Builder
 Plugin URI: http://wordpress.org/
-Description: Visual front-end editor
-Author: VE Page builder
+Description: Visually create your sale pages, landing pages... in WordPress with simple yet powerful drag & drop builder.
+Author: AIO WP Builder
 Version: 1.1
-Author URI: http://wordpress.org/
+Author URI: http://allinonewpbuilder.com/
 */
 define('VE_DIR',__DIR__);
 define('VE_URL',plugins_url('',__FILE__));

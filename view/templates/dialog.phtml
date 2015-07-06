@@ -1,0 +1,47 @@
+<?php
+/**
+ * @var VE_View_Manager $this
+ */
+$row=$this->getVeManager()->getElementManager()->getElement('ve_row');
+$row_layouts=array();
+if($row&&$row instanceof VeCore_VeRow){
+    $row_layouts=$row->getLayouts();
+}
+
+?>
+<div class="ve_dialog" id="ve_row-layout-dialog" data-view="rowLayout">
+    <div class="ve_dialog-header">
+        <h3 class="ve_dialog-title">Layout control</h3>
+        <a class="ve_dialog-close" href="#"><i class="fa fa-times-circle close-icon"></i></a>
+    </div>
+    <div class="ve_dialog-body">
+        <div class="ve_row">
+            <div class="ve_col-sm-12 ve_column ve_layout-dialog-switcher">
+                <div class="ve-label">Row layout</div>
+                <select class="layout-select">
+                    <option value="">Select a layout</option>
+                    <?php foreach($row_layouts as $layout){
+                        printf('<option value="%s">%s</option>',$layout['cells'],$layout['title']);
+                    }
+                    ?>
+                </select>
+                <?php /*foreach($row_layouts as $layout): ?>
+                    <a class="ve_layout-btn <?php echo $layout['icon_class']
+                        .'" data-cells="'.$layout['cells']
+                        .'" data-cells-mask="'.$layout['mask']
+                        .'" title="'.$layout['title'] ?>"><span class="icon"></span></a>
+                <?php endforeach; */?>
+
+                <span class="ve_description ve_clearfix">Select row layout from predefined options.</span>
+            </div>
+            <div class="ve_col-sm-12 ve_column">
+                <div class="ve-label">Enter custom layout for your row</div>
+                <div class="ve_input_block">
+                    <input type="text" id="ve_row-layout" value="" class="ve_row_layout_input" name="padding">
+                    <button class="ve_btn ve_btn-primary ve_btn-sm" id="ve_row-layout-update">Update</button>
+                    <span class="ve_description ve_clearfix">Change particular row layout manually by specifying number of columns and their size value.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

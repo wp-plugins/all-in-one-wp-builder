@@ -1,0 +1,33 @@
+.fa{
+    @max-btn-index:17;
+    .close-btn-attrs(){
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 15px;
+        height: 15px;
+
+    }
+    .close-btn(@btn){
+        & when(@btn<10) {
+            &.close-btn-icon-0@{btn} {
+                background: url("../images/close/close_button_0@{btn}.png");
+                .close-btn-attrs();
+            }
+        }
+        & when(@btn>=10) {
+            &.close-btn-icon-@{btn} {
+                background: url("../images/close/close_button_@{btn}.png");
+                .close-btn-attrs();
+            }
+        }
+    }
+    .make-close-btn(@btn)when(@btn<=@max-btn-index){
+        .close-btn(@btn);
+        .make-close-btn(@btn+1);
+    }
+    .make-close-btn(3);
+}
+
+h1, .ve-h1, h2, .ve-h2, h3, .ve-h3, .ve-h4, .ve-h5, .ve-h6, h4, h5, h6, ol, ul {
+  margin: 0;
+}

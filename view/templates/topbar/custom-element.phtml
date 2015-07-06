@@ -1,0 +1,24 @@
+<?php
+/**
+ * @var VE_Editor $editor
+ * @var VE_View_Manager $this
+ */
+
+?>
+<a href="#TB_inline?width=300&height=200&inlineId=ve-save-custom-element" title="Save as Custom Element" class="thickbox">Custom Element</a>
+<div id="ve-save-custom-element" class="hidden">
+    <form class="ve-ajax-form ve-dialog" action="" data-message="Element saved!">
+        <input type="hidden" name="action" value="ve_save_as_element"/>
+        <input type="hidden" name="from_page" value="<?php echo $editor->getPost()->ID;?>"/>
+        <div style="padding:10px">
+            <label>Title:</label>
+            <input class="widefat" name="post_title" value="<?php echo esc_attr($editor->getPost()->post_title);?>" type="text"/>
+            <label>Icon class:</label>
+            <input class="widefat" name="icon_class" value="<?php echo esc_attr($editor->getPost()->icon_class);?>" type="text"/>
+            <p class="form-control submit">
+                <input type="submit" value="Save" class="save"/>
+            </p>
+        </div>
+    </form>
+    <div class="ve_clearfix"></div>
+</div>

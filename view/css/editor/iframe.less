@@ -1,0 +1,34 @@
+.compose-mode,.view-mode {
+ @import "compose-mode.less";
+}
+.view-mode{
+  @import "view-mode.less";
+}
+.ve_row.ve_row-no-padding {
+  .ve_element-ve_col {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+body#ve-editor-template {
+    width: 100%;
+    background: #FFF;
+    overflow-x: hidden;
+    &:before, &:after {
+        width: auto;
+    }
+    .ve-the-editor {
+        padding: 40px;
+    }
+}
+
+.ve-editor-view {
+    width: 970px;
+    border: 1px solid #9E9E9E;
+
+    left: 37px !important;
+    margin: auto;
+    h1 {
+        margin-bottom: 30px;
+    }
+}

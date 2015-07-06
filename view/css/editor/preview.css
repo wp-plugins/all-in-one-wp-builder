@@ -7693,7 +7693,6 @@
 .ve_element_preview .ve-button-block,
 .ve_element_preview .ve-button-stacked {
   display: block;
-  width: 100%;
 }
 .ve_element_preview .ve-button-square {
   border-radius: 0;

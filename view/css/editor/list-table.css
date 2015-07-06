@@ -1,0 +1,21 @@
+.ve-list-table .ve-list-posts {
+  table-layout: auto;
+}
+.ve-list-table .ve-list-posts .column-action {
+  width: 25%;
+}
+.ve-list-table .ve-list-posts .column-date {
+  width: 18%;
+}
+.ve-list-table .ve-list-popup-options {
+  table-layout: auto;
+}
+.ve-list-table .ve-list-popup-options .column-action {
+  width: 20%;
+}
+.ve-editor-listing {
+  padding: 1em 1.4em;
+}
+.ve-editor-listing > ul {
+  display: none;
+}

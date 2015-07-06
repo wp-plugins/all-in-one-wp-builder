@@ -1,0 +1,54 @@
+<?php
+/**
+ * @var VE_Popup_Manager $popupManager
+ * @var WP_Post $post
+ */
+$popups=$popupManager->getPopups();
+
+$current_popup=$post->ve_popup_id;
+$positionOptions=array(
+    'center'=>'Center',
+    'top-left'=>'Top left',
+    'top-right'=>'Top Right',
+    'bottom-left'=>'Bottom left',
+    'bottom-right'=>'Bottom Right'
+);
+$openOptions=array(
+    ''=>'Not open automatically',
+    'open_on_mouse_out'=>'Open when mouse out of page',
+    'open_with_delay'=>'Open after page loaded',
+);
+?>
+<p>
+    <label>Select popup:</label>
+    <select name="ve_post_popup">
+        <option value="">None</option>
+        <?php foreach($popups as $popup){
+        printf('<option value="%s"%s>%s</option>',$popup->ID,selected($popup->ID,$current_popup,false),$popup->post_title);
+        }?>
+    </select>
+</p>
+
+<p class="ve_row">
+    <label for="ve_popup_position" class="ve_col-sm-3">Popup Position:</label>
+    <select name="ve_popup_position" id="ve_popup_position" class="ve_col-sm-3">
+        <?php foreach($positionOptions as $value=>$title){
+            printf('<option value="%s"%s>%s</option>',$value,selected($value,$post->ve_popup_position,false),$title);
+        }?>
+    </select>
+
+</p>
+
+<p class="ve_row">
+    <label for="ve_popup_open" class="ve_col-sm-4">Popup Open:</label>
+    <select name="ve_popup_open" id="ve_popup_open" class="ve_col-sm-4">
+        <?php foreach($openOptions as $value=>$title){
+            printf('<option value="%s"%s>%s</option>',$value,selected($value,$post->ve_popup_open,false),$title);
+        }?>
+    </select>
+
+</p>
+<div class="ve_row" data-show-if="ve_popup_open" data-show-value="open_with_delay">
+    <label class="ve_col-sm-4" for="ve_popup_open_delay">Delay timer(in second):</label>
+    <input class="ve_col-sm-4" type="number" name="ve_popup_open_delay" id="ve_popup_open_delay" value="<?php echo absint($post->ve_popup_open_delay);?>"/>
+</div>

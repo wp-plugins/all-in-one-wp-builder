@@ -1,0 +1,24 @@
+<?php
+/**
+ * @var VE_Editor $editor
+ * @var VE_View_Manager $this
+ */
+$list=$this->getVeManager()->getListTableManager()->getTable('VE_Post_List_Table',
+    array('screen'=>'ve-list-posts','post_type'=>$this->getVeManager()->getPostManager()->post_type_template));
+$list->prepare_items();
+?>
+<a href="#TB_inline?width=600&height=550&inlineId=ve-template-listing" title="Templates" class="thickbox">Templates</a>
+<div id="ve-template-listing" class="hidden">
+    <div class="ve-editor-listing">
+        <ul>
+            <li><a href="#ve-page-listing-1">Pages</a></li>
+        </ul>
+        <div id="ve-page-listing-1" class="ve-list-table">
+            <form class="ve-manage-list-post" data-post_type="<?php echo $list->post_type;?>">
+                <?php $list->display();?>
+            </form>
+        </div>
+    </div>
+
+    <div class="ve_clearfix"></div>
+</div>

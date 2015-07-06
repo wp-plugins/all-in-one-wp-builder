@@ -339,7 +339,7 @@
                     columnsUsed+=this.getColumnNumber(offset);
                 },this);
             }
-            var columnEmpty=this.total_column-columnsUsed%this.total_column,
+            var columnEmpty=this.total_column-columnsUsed,
                 $columnPlaceHolder=this.$el.find('.ve_col-placeholder');
             $columnPlaceHolder.remove();
             var row_height=this.$el.height();

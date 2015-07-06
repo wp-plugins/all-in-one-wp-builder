@@ -1,0 +1,217 @@
+.clearfix() {
+  &:before,
+  &:after {
+    content: " "; // 1
+    display: table; // 2
+  }
+  &:after {
+    clear: both;
+  }
+}
+.clearfix {
+  .clearfix();
+}
+.ve_non_responsive {
+    //If "Disable responsive content elements" is checked in VC Settings
+    .ve_row {
+        .ve_col-sm-1 {  .make-xs-column(1); }
+        .ve_col-sm-2 {  .make-xs-column(2); }
+        .ve_col-sm-3 {  .make-xs-column(3); }
+        .ve_col-sm-4 {  .make-xs-column(4); }
+        .ve_col-sm-5 {  .make-xs-column(5); }
+        .ve_col-sm-6 {  .make-xs-column(6); }
+        .ve_col-sm-7 {  .make-xs-column(7); }
+        .ve_col-sm-8 {  .make-xs-column(8); }
+        .ve_col-sm-9 {  .make-xs-column(9); }
+        .ve_col-sm-10 { .make-xs-column(10); }
+        .ve_col-sm-11 { .make-xs-column(11); }
+        .ve_col-sm-12 { .make-xs-column(12); }
+        .ve_loop-grid-columns(@grid-columns, sm, offset);
+        .ve_hidden-sm {
+            .responsive-invisibility();
+        }
+    }
+}
+.responsive-invisibility() {
+  display: none !important;
+}
+.make-row(@gutter: @grid-gutter-width) {
+  margin-left:  (@gutter / -2);
+  margin-right: (@gutter / -2);
+  .clearfix();
+}
+
+.make-xs-column(@columns; @gutter: @grid-gutter-width) {
+  position: relative;
+  float: left;
+  width: percentage((@columns / @grid-columns));
+  min-height: 1px;
+  padding-left:  (@gutter / 2);
+  padding-right: (@gutter / 2);
+}
+@grid-columns:              12;
+//** Padding between columns. Gets divided in half for the left and right.
+@grid-gutter-width:         30px;
+@screen-xs:                  480px;
+//** Deprecated `@screen-xs-min` as of v3.2.0
+@screen-xs-min:              @screen-xs;
+//** Deprecated `@screen-phone` as of v3.0.1
+@screen-phone:               @screen-xs-min;
+
+// Small screen / tablet
+//** Deprecated `@screen-sm` as of v3.0.1
+@screen-sm:                  768px;
+@screen-sm-min:              @screen-sm;
+//** Deprecated `@screen-tablet` as of v3.0.1
+@screen-tablet:              @screen-sm-min;
+
+// Medium screen / desktop
+//** Deprecated `@screen-md` as of v3.0.1
+@screen-md:                  992px;
+@screen-md-min:              @screen-md;
+//** Deprecated `@screen-desktop` as of v3.0.1
+@screen-desktop:             @screen-md-min;
+
+// Large screen / wide desktop
+//** Deprecated `@screen-lg` as of v3.0.1
+@screen-lg:                  1200px;
+@screen-lg-min:              @screen-lg;
+//** Deprecated `@screen-lg-desktop` as of v3.0.1
+@screen-lg-desktop:          @screen-lg-min;
+
+// So media queries don't overlap when required, provide a maximum
+@screen-xs-max:              (@screen-sm-min - 1);
+@screen-sm-max:              (@screen-md-min - 1);
+@screen-md-max:              (@screen-lg-min - 1);
+.ve_make-grid-columns() {
+// Common styles for all sizes of grid columns, widths 1-12
+.ve_col(@index) when (@index = 1) { // initial
+@item: ~".ve_col-xs-@{index}, .ve_col-sm-@{index}, .ve_col-md-@{index}, .ve_col-lg-@{index}";
+.ve_col((@index + 1), @item);
+}
+.ve_col(@index, @list) when (@index =< @grid-columns) { // general; "=<" isn't a typo
+@item: ~".ve_col-xs-@{index}, .ve_col-sm-@{index}, .ve_col-md-@{index}, .ve_col-lg-@{index}";
+.ve_col((@index + 1), ~"@{list}, @{item}");
+}
+.ve_col(@index, @list) when (@index > @grid-columns) { // terminal
+    @{list} {
+    position: relative;
+// Prevent columns from collapsing when empty
+    min-height: 1px;
+// Inner gutter via padding
+    padding-left:  (@grid-gutter-width / 2);
+    padding-right: (@grid-gutter-width / 2);
+    box-sizing: border-box;
+}
+}
+.ve_col(1); // kickstart it
+}
+.ve_float-grid-columns(@class) {
+    .ve_col(@index) when (@index = 1) { // initial
+    @item: ~".ve_col-@{class}-@{index}";
+    .ve_col((@index + 1), @item);
+}
+    .ve_col(@index, @list) when (@index =< @grid-columns) { // general
+    @item: ~".ve_col-@{class}-@{index}";
+    .ve_col((@index + 1), ~"@{list}, @{item}");
+}
+    .ve_col(@index, @list) when (@index > @grid-columns) { // terminal
+    @{list} {
+    float: left;
+}
+}
+    .ve_col(1); // kickstart it
+}
+.ve_calc-grid-column(@index, @class, @type) when (@type = width) and (@index > 0) {
+    .ve_col-@{class}-@{index} {
+    width: percentage((@index / @grid-columns));
+}
+}
+.ve_calc-grid-column(@index, @class, @type) when (@type = push) and (@index > 0) {
+    .ve_col-@{class}-push-@{index} {
+    left: percentage((@index / @grid-columns));
+}
+}
+.ve_calc-grid-column(@index, @class, @type) when (@type = push) and (@index = 0) {
+    .ve_col-@{class}-push-0 {
+                        left: auto;
+                    }
+}
+.ve_calc-grid-column(@index, @class, @type) when (@type = pull) and (@index > 0) {
+    .ve_col-@{class}-pull-@{index} {
+    right: percentage((@index / @grid-columns));
+}
+}
+.ve_calc-grid-column(@index, @class, @type) when (@type = pull) and (@index = 0) {
+    .ve_col-@{class}-pull-0 {
+                        right: auto;
+                    }
+}
+.ve_calc-grid-column(@index, @class, @type) when (@type = offset) {
+    .ve_col-@{class}-offset-@{index} {
+    margin-left: percentage((@index / @grid-columns));
+}
+}
+
+// Basic looping in LESS
+.ve_loop-grid-columns(@index, @class, @type) when (@index >= 0) {
+    .ve_calc-grid-column(@index, @class, @type);
+    // next iteration
+    .ve_loop-grid-columns((@index - 1), @class, @type);
+}
+
+// Create grid for specific class
+.ve_make-grid(@class) {
+    .ve_float-grid-columns(@class);
+    .ve_loop-grid-columns(@grid-columns, @class, width);
+    .ve_loop-grid-columns(@grid-columns, @class, pull);
+    .ve_loop-grid-columns(@grid-columns, @class, push);
+    .ve_loop-grid-columns(@grid-columns, @class, offset);
+}
+
+.ve_row {
+    .make-row();
+}
+
+.ve_make-grid-columns();
+// Extra small grid
+//
+// Columns, offsets, pushes, and pulls for extra small devices like
+// smartphones.
+
+.ve_make-grid(xs);
+
+@media (min-width: @screen-sm-min) {
+    .ve_make-grid(sm);
+}
+
+
+// Medium grid
+//
+// Columns, offsets, pushes, and pulls for the desktop device range.
+
+@media (min-width: @screen-md-min) {
+    .ve_make-grid(md);
+}
+// Large grid
+//
+// Columns, offsets, pushes, and pulls for the large desktop device range.
+
+@media (min-width: @screen-lg-min) {
+    .ve_make-grid(lg);
+}
+/*
+//Grid
+.ve_container-block {
+    .container-fixed();
+    @media (min-width: @screen-sm) {
+        width: @container-sm;
+    }
+    @media (min-width: @screen-md) {
+        width: @container-md;
+    }
+    @media (min-width: @screen-lg-min) {
+        width: @container-lg;
+    }
+}
+*/

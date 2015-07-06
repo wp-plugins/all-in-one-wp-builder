@@ -68,13 +68,17 @@ class VeCore_CssEditor extends Ve_Feature_Abstract{
         $output = '<div class="ve_css-editor ve_row" data-css-editor="true">';
         $output .= $this->onionLayout();
         $output .= '<div class="ve_col-xs-5 ve_settings">'
-            . '    <label>' . __( 'Border', 'visual_editor' ) . '</label> '
-            . '    <div class="color-group"><input type="text" name="border_color" value="'.$this->get_field_value('border_color').'" class="ve_color-control"></div>'
-            . '    <div class="ve_border-style"><select name="border_style" class="ve_border-style">' . $this->getBorderStyleOptions() . '</select></div>'
-            . '    <label>' . __( 'Background', 'visual_editor' ) . '</label>'
-            . '    <div class="color-group"><input type="text" name="background_color" value="'.$this->get_field_value('background_color').'" class="ve_color-control"></div>'
-            . '    <div class="ve_background-image">' . $this->getBackgroundImageControl() . '<div class="ve_clearfix"></div></div>'
-            . '    <div class="ve_background-style"><select name="background_style" class="ve_background-style">' . $this->getBackgroundStyleOptions() . '</select></div>'
+            . '    <h3>' . __( 'Border', 'visual_editor' ) . '</h3> '
+            . '    <div class="border-settings">'
+            . '         <div class="color-group"><span class="label">Color:</span> <input type="text" name="border_color" value="'.$this->get_field_value('border_color').'" class="ve_color-control"></div>'
+            . '         <div class="ve_border-style"><span class="label">Style:</span> <select name="border_style" class="ve_border-style">' . $this->getBorderStyleOptions() . '</select></div>'
+            .      '</div>'
+            . '    <h3>' . __( 'Background', 'visual_editor' ) . '</h3>'
+            . '    <div class="background-settings">'
+            . '         <div class="ve_background-style"><select name="background_style" class="ve_background-style">' . $this->getBackgroundStyleOptions() . '</select></div>'
+            . '         <div class="color-group"><input type="text" name="background_color" value="'.$this->get_field_value('background_color').'" class="ve_color-control"></div>'
+            . '         <div class="ve_background-image"><span class="label">Select Image</span>' . $this->getBackgroundImageControl() . '<div class="ve_clearfix"></div></div>'
+            . '    </div>'
             . '</div>';
         $output .= '';
         $output .= '</div><div class="ve_clearfix"></div>';

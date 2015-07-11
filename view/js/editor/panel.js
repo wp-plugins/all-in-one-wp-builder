@@ -40,6 +40,9 @@
                         preview.html(html);
                     });
             }
+            preview.on('click','button',function(){
+                return false;
+            });
         },
         render:function(){
             this.setTabs();

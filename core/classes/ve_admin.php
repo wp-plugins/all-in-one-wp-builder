@@ -11,17 +11,18 @@ class VE_Admin extends VE_Manager_Abstract{
     }
     function adminHocks(){
         add_action( 'admin_menu', array($this,'buildAdminMenus') );
-        add_action('wp_loaded',function(){
-            $ve_pages=array('ve-posts','ve-pages');
-            if(isset($_GET['page'])){
-                if(in_array($_GET['page'],$ve_pages)){
-                    unset($_GET['post_type']);
-                    unset($_REQUEST['post_type']);
-                    unset($_GET['_wp_http_referer']);
-                    add_filter( 'parse_query', array($this,'posts_filter') );
-                }
+        add_action('wp_loaded',array($this,'onWpLoaded'));
+    }
+    function onWpLoaded(){
+        $ve_pages=array('ve-posts','ve-pages');
+        if(isset($_GET['page'])){
+            if(in_array($_GET['page'],$ve_pages)){
+                unset($_GET['post_type']);
+                unset($_REQUEST['post_type']);
+                unset($_GET['_wp_http_referer']);
+                add_filter( 'parse_query', array($this,'posts_filter') );
             }
-        });
+        }
     }
     function posts_filter( $query ){
         if(is_admin()) {

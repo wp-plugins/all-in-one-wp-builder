@@ -62,18 +62,18 @@
 .ve_css-editor .ve_layout-onion .ve_margin {
   border: 1px dashed #bababa;
   margin: 1px;
-  background: #E7F99C;
+  background: #fff;
 }
 .ve_css-editor .ve_layout-onion .ve_margin .ve_border {
   border: 1px solid #bababa;
-  background: #6A6A6A;
+  background: #ffffff;
 }
 .ve_css-editor .ve_layout-onion .ve_margin .ve_border label {
-  color: #fff;
+  color: #000;
 }
 .ve_css-editor .ve_layout-onion .ve_margin .ve_border .ve_padding {
   border: 1px solid #bababa;
-  background: #938FDF;
+  background: #fff;
 }
 .ve_css-editor .ve_layout-onion .ve_margin .ve_border .ve_padding .ve_content {
   border: 1px solid  #bababa;
@@ -83,7 +83,7 @@
   font-size: 10px;
   line-height: 11px;
   box-sizing: border-box;
-  background: #1E2226;
+  background: #000;
 }
 .ve_css-editor .ve_layout-onion .ve_margin .ve_border .ve_padding .ve_content i {
   margin: 8px auto;

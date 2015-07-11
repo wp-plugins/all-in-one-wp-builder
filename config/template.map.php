@@ -1,4 +1,4 @@
 <?php
 return array(
-    'metabox-popup'=> __DIR__.'/../core/templates/metaboxes/metabox-popup.phtml',
+    'metabox-popup'=> dirname(__FILE__).'/../core/templates/metaboxes/metabox-popup.phtml',
 );

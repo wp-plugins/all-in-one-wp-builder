@@ -78,7 +78,7 @@ class VE_Controller extends VE_Manager_Abstract{
         $posts=get_posts(array('s'=>$query,'numberposts'=>10,'post_type'=>$type));
         if($posts){
             foreach($posts as $post){
-                $item=['text'=>$post->post_title,'id'=>$post->ID];
+                $item=array('text'=>$post->post_title,'id'=>$post->ID);
                 $result[]=$item;
             }
         }
@@ -277,7 +277,43 @@ class VE_Controller extends VE_Manager_Abstract{
             }
             $popupOptions[$p->ID] = $p->post_title . $draf . ' (' . count($poptions) .' options)';
         }
-        echo json_encode($popupOptions);
+        $results=array();
+        if(isset($_POST['post_id'])) {
+            $current_popup_id = absint($_POST['post_id']);
+            $poptions = get_post_meta($current_popup_id, '_ve_poptions', true);
+            $positionOptions = array(
+                'center' => 'Center',
+                'top-left' => 'Top left',
+                'top-right' => 'Top Right',
+                'bottom-left' => 'Bottom left',
+                'bottom-right' => 'Bottom Right'
+            );
+            $placementOptions = array(
+                '' => 'None',
+                'all' => 'Whole site',
+                'post' => 'All posts',
+                'page' => 'All pages',
+                'category' => 'By Category',
+
+            );
+            $openOptions = array(
+                '' => 'Not open automatically',
+                'open_on_mouse_out' => 'Open when mouse out of page',
+                'open_with_delay' => 'Open after page loaded',
+            );
+            $list=array();
+            foreach ($poptions as $option) {
+                $str = $positionOptions[$option['position']] . "_";
+                $str .= $placementOptions[$option['placement']] . "_";
+                $str .= $openOptions[$option['open']];
+                $list[]='<li>'.$str.'</li>';
+            }
+            $list=join('',$list);
+            $results['list']=$list;
+        }
+
+        $results['options']=$popupOptions;
+        echo json_encode($results);
         die;
     }
     function sanitize_size($size){

@@ -47,11 +47,14 @@
             var self=this;
             ajax({action:"ve_get_popup_options"}).done(function(data){
                 if(data) {
+                    var options=data.options;
                     var $html='';
-                    $.each(data, function (k, v) {
+                    $.each(options, function (k, v) {
                         $html += '<option value="' + k + '">' + v + '</option>';
                     });
+                    var list=data.list;
                     self.$pOption.find('#ve_poption_popup').html($html);
+                    $('#popup-setting-tab1').find('.popup-options-list').html(list);
                 }
             });
         },

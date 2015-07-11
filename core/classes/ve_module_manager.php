@@ -63,7 +63,8 @@ class VE_Module_Manager extends VE_Manager_Abstract{
             $config_dir=$module_dir.'/'.self::CONFIG_DIR;
             $config_file=$config_dir.'/'.self::CONFIG_FILE;
             if(file_exists($config_file)) {
-                $modulesConfig =array_replace_recursive($modulesConfig, include $config_file);
+                $config=include $config_file;
+                $modulesConfig =array_replace_recursive($modulesConfig, $config);
             }
         }
         $config=$this->getVeManager()->get('config');

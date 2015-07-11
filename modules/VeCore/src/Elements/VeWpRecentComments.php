@@ -12,6 +12,7 @@ class VeCore_VeWpRecentComments extends Ve_Element implements VE_Element_Interfa
             'icon'=>'ve-row.png',
             'container'=>false,
             'has_content'=>false,
+            'group'=>'wp',
             'defaults'=>array(),
 
         );

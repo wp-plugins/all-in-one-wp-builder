@@ -193,12 +193,14 @@ class VE_Editor extends VE_Manager_Abstract{
         show_admin_bar(false);
         add_action( 'wp_enqueue_scripts', array( $this, 'iframeEnqueueScripts' ) );
         if($this->has('page_template')){
-            $template=$this->get('page_template');
-            add_action('template_redirect',function() use($template){
-                $this->viewManager->render($template);
-                exit();
-            });
+
+            add_action('template_redirect',array($this,'templateRedirect'));
         }
+    }
+    function templateRedirect(){
+        $template=$this->get('page_template');
+        $this->viewManager->render($template);
+        exit();
     }
     function iframeEnqueueScripts(){
         //wp_enqueue_script('');

@@ -66,17 +66,17 @@ $poptions = get_post_meta($post->ID,'_ve_poptions',true);
                 <p class="ve_row">
                     <label for="position" class="ve_col-sm-3">Popup Options:</label>
                 </p>
-                <p class="">
+                <ul class="popup-options-list">
                 <?php foreach($poptions as $option){
                     $str = $positionOptions[$option['position']] . "_";
                     $str .= $placementOptions[$option['placement']] . "_";
                     $str .= $openOptions[$option['open']] ;
                     ?>
 
-                       <strong><?php echo $str;?></strong><br/>
+                       <li><?php echo $str;?></li>
 
                 <?php } ?>
-                </p>
+                </ul>
 
 
             </div>

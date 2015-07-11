@@ -11,6 +11,7 @@
         <img src="<?php echo VE_URL.'/view/images/logo.png'?>" />
     </div>
     <ul class="panel-items-control">
+
         <li>
             <a href="#" data-show-item><?php echo $editor->getPostType();?> Setting <i class="fa fa-angle-down"></i></a>
             <ul class="submenu">
@@ -46,16 +47,6 @@
             <li>
                 <a id="toggle-mode" class="vebtn">Grid Off</a>
             </li>
-
-
-            <li>
-                <a href="#" data-show-item>New <i class="fa fa-angle-down"></i></a>
-                <ul class="submenu">
-                    <li><a  href="<?php echo admin_url("edit.php?ve_action=ve_inline&post_id=new&post_type=page");?>">Page</a></li>
-                </ul>
-
-            </li>
-
             <li>
                 <a href="#" data-show-item>Save <i class="fa fa-angle-down"></i></a>
                 <ul class="submenu">
@@ -67,12 +58,17 @@
                 </ul>
 
             </li>
+            <li>
+                <a href="#" data-show-item>New <i class="fa fa-angle-down"></i></a>
+                <ul class="submenu">
+                    <li><a  href="<?php echo admin_url("edit.php?ve_action=ve_inline&post_id=new&post_type=page");?>">Page</a></li>
+                </ul>
 
+            </li>
             <li>
                 <a href="#" data-show-item>Edit <i class="fa fa-angle-down"></i></a>
                 <ul class="submenu">
                     <li><?php $this->render('panel/page-listing');?></li>
-
                 </ul>
 
             </li>

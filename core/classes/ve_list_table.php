@@ -24,7 +24,7 @@ class VE_List_Table_Manager extends VE_Manager_Abstract{
         }
         if ( isset( $core_classes[ $class ] ) ) {
             foreach ( (array) $core_classes[ $class ] as $required )
-                require_once( __DIR__ . '/list-tables/ve-' . $required . '-list-table.php' );
+                require_once( dirname(__FILE__) . '/list-tables/ve-' . $required . '-list-table.php' );
 
             if ( isset( $args['screen'] ) )
                 $args['screen'] = convert_to_screen( $args['screen'] );

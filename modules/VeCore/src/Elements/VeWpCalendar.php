@@ -9,6 +9,7 @@ class VeCore_VeWpCalendar extends Ve_Element implements VE_Element_Interface{
             'icon_class'=>'fa fa-calendar',
             'container'=>false,
             'has_content'=>false,
+            'group'=>'wp',
             'defaults'=>array(),
 
         );

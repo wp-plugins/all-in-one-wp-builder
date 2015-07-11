@@ -99,6 +99,7 @@ class VE_Widget_ShortCode{
         <?php
     }
 }//end class
-add_action('ve_init',function($veManager){
+function _init_ve_widget($veManager){
     new VE_Widget_ShortCode($veManager);
-});
+}
+add_action('ve_init','_init_ve_widget');

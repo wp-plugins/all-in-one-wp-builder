@@ -9,6 +9,7 @@ class VeCore_VeWpPages extends Ve_Element implements VE_Element_Interface{
             'icon_class'=>'fa fa-desktop',
             'container'=>false,
             'has_content'=>false,
+            'group'=>'wp',
             'defaults'=>array(),
 
         );

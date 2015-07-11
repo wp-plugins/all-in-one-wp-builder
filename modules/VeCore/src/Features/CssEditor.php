@@ -12,7 +12,7 @@ class VeCore_CssEditor extends Ve_Feature_Abstract{
         $resource=$this->getElement()->getVeManager()->getResourceManager();
         $resource->addEditorCss('wp-color-picker')
             ->addEditorJs('wp-color-picker');
-        $this->enqueue_script('css-editor',ve_resource_url( __DIR__.'/../../view/js/css_editor.js' ));
+        $this->enqueue_script('css-editor',ve_resource_url( dirname(__FILE__).'/../../view/js/css_editor.js' ));
     }
     function update($instance){
         if($instance) {

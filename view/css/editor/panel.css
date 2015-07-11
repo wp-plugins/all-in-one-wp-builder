@@ -159,6 +159,9 @@
   height: auto;
   max-height: 450px;
 }
+#ve-panel .ve-form-wrapper #ve-element-form .form-content.ve_row {
+  margin: 0;
+}
 #ve-panel .ve-form-wrapper #ve-element-form .form-content input:focus {
   outline: none;
   box-shadow: none;

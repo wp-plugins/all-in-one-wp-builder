@@ -17,7 +17,7 @@ class VeCore_VeImage extends Ve_Element implements VE_Element_Interface
         parent::__construct($id_base, $name, $options);
     }
     function init(){
-        $this->enqueue_js('el-image',__DIR__.'/../../view/js/elements/ve-image.js');
+        $this->enqueue_js('el-image',dirname(__FILE__).'/../../view/js/elements/ve-image.js');
         $this->ready('ve_front.image.start();');
         $this->support('CssEditor');
     }
@@ -52,7 +52,7 @@ class VeCore_VeImage extends Ve_Element implements VE_Element_Interface
         $link=$instance['link'];
         $img_id = preg_replace( '/[^\d]/', '', $image );
         $img = ve_get_attachment_image( array( 'attach_id' => $img_id, 'thumb_size' => $img_size, 'class' => $style ) );
-        if ( $img == NULL ) $img['thumbnail'] = '<img class="' . $style  . '" src="' . ve_resource_url( __DIR__.'/../../view/images/no_image.png' ) . '" />';
+        if ( $img == NULL ) $img['thumbnail'] = '<img class="' . $style  . '" src="' . ve_resource_url( dirname(__FILE__).'/../../view/images/no_image.png' ) . '" />';
 
         $el_class = $instance['class'];
 

@@ -108,7 +108,7 @@ class VE_Widget_Manager extends VE_Manager_Abstract{
         }
 
         $categories=get_the_category($post->ID);
-        $category_ids=array_map(function($cat){return $cat->cat_ID;},$categories);
+        $category_ids = array_map(create_function('$cat','return $cat->cat_ID;'), $categories);
         foreach ($this->allWidgets as $widget) {
             if($widget->placement==$post_type){//widget for all post
                 $widgets[]=$widget;

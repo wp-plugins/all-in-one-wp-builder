@@ -135,9 +135,7 @@ class VE_Popup_Manager extends VE_Manager_Abstract{
                         } else {
                             global $post;
                             $categories = get_the_category($post->ID);
-                            $category_ids = array_map(function ($cat) {
-                                return $cat->cat_ID;
-                            }, $categories);
+                            $category_ids = array_map(create_function('$cat','return $cat->cat_ID;'), $categories);
                             $found = false;
                             foreach ($category_ids as $id) {
                                 if (in_array($id, (array)$popup_category)) {
@@ -185,19 +183,20 @@ class VE_Popup_Manager extends VE_Manager_Abstract{
     }
     function popupScript(){
         if(!empty($this->loadedPopup)){
-            $src=ve_resource_url(__DIR__.'/../../view/js/ve_popup.js');
-            $src_cookie=ve_resource_url(__DIR__.'/../../view/libraries/jquery-cookie/jquery.cookie.js');
-            $src_storage=ve_resource_url(__DIR__.'/../../view/libraries/jquery-storage/jquery.storage.js');
+            $src=ve_resource_url(dirname(__FILE__).'/../../view/js/ve_popup.js');
+            $src_cookie=ve_resource_url(dirname(__FILE__).'/../../view/libraries/jquery-cookie/jquery.cookie.js');
+            $src_storage=ve_resource_url(dirname(__FILE__).'/../../view/libraries/jquery-storage/jquery.storage.js');
             wp_register_script('jquery.cookie',$src_cookie,array('jquery'),VE_VERSION,true);
             wp_register_script('jquery.storage',$src_storage,array('jquery.cookie'),VE_VERSION,true);
             wp_enqueue_script('ve_popup_js',$src,array('jquery.storage'),VE_VERSION,true);
         }
     }
     function setupMetaBox(){
-        add_action('add_meta_boxes',function(){
-            add_meta_box('ve-popup-setting','Popup',array($this,'metaBoxCallback'),'page','side');
-        });
+        add_action('add_meta_boxes',array($this,'addMetaBox'));
         add_action('save_post',array($this,'savePostData'));
+    }
+    function addMetaBox(){
+        add_meta_box('ve-popup-setting','Popup',array($this,'metaBoxCallback'),'page','side');
     }
     function savePostData($post_ID){
         if(isset($_POST['ve_post_popup'])){

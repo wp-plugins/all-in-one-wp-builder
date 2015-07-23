@@ -15,7 +15,7 @@ class VeCore_VeRow extends Ve_Element implements VE_Element_Interface{
     }
     function init(){
         $this->support('CssEditor');
-        $this->enqueue_js('el-row',__DIR__.'/../../view/js/elements/ve-row.js');
+        $this->enqueue_js('el-row',dirname(__FILE__).'/../../view/js/elements/ve-row.js');
         $this->ready('ve_front.ve_row.start();');
     }
     function element($instance,$content=''){

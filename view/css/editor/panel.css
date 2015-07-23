@@ -159,6 +159,44 @@
   height: auto;
   max-height: 450px;
 }
+#ve-panel .ve-form-wrapper #ve-element-form .form-content.ve_row {
+  margin: 0;
+}
+#ve-panel .ve-form-wrapper #ve-element-form .form-content input:focus {
+  outline: none;
+  box-shadow: none;
+}
+#ve-panel .ve-form-wrapper #ve-element-form .form-content input,
+#ve-panel .ve-form-wrapper #ve-element-form .form-content textarea,
+#ve-panel .ve-form-wrapper #ve-element-form .form-content select {
+  border-radius: 4px;
+  border: 2px solid #91c46b;
+  color: #877;
+}
+#ve-panel .ve-form-wrapper #ve-element-form .form-content input.small,
+#ve-panel .ve-form-wrapper #ve-element-form .form-content textarea.small,
+#ve-panel .ve-form-wrapper #ve-element-form .form-content select.small {
+  height: 30px;
+  width: 40px;
+}
+#ve-panel .ve-form-wrapper #ve-element-form .form-content input.medium,
+#ve-panel .ve-form-wrapper #ve-element-form .form-content textarea.medium,
+#ve-panel .ve-form-wrapper #ve-element-form .form-content select.medium {
+  height: 35px;
+  width: 120px;
+}
+#ve-panel .ve-form-wrapper #ve-element-form .form-content input.long,
+#ve-panel .ve-form-wrapper #ve-element-form .form-content textarea.long,
+#ve-panel .ve-form-wrapper #ve-element-form .form-content select.long {
+  height: 35px;
+  width: 200px;
+}
+#ve-panel .ve-form-wrapper #ve-element-form .form-content input.xlong,
+#ve-panel .ve-form-wrapper #ve-element-form .form-content textarea.xlong,
+#ve-panel .ve-form-wrapper #ve-element-form .form-content select.xlong {
+  height: 40px;
+  width: 300px;
+}
 #ve-panel .ve-form-wrapper #ve-element-form .form-content .ve_input_block {
   margin: 1em 0;
 }
@@ -187,7 +225,7 @@
 #ve-panel .ve-form-wrapper #ve-element-form .form-content .element-form-tabs .ui-tabs-panel {
   margin-left: 120px;
   max-height: 420px;
-  overflow-y: auto ;
+  overflow-y: auto;
 }
 #ve-panel .ve-form-wrapper #ve-element-form .form-content .element-form-tabs .ui-tabs-panel label {
   min-width: 140px;

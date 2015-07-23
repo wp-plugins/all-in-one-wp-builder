@@ -15,7 +15,7 @@ class VeCore_VeText extends Ve_Element implements VE_Element_Interface{
         parent::__construct($id_base,$name,$options);
     }
     function init(){
-        $this->enqueue_js('el-text',__DIR__.'/../../view/js/elements/ve-text.js');
+        $this->enqueue_js('el-text',dirname(__FILE__).'/../../view/js/elements/ve-text.js');
         $this->ready('ve_front.text.start();');
         $this->support('CssEditor');
     }

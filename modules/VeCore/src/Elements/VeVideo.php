@@ -6,7 +6,7 @@ class VeCore_VeVideo extends Ve_Element implements VE_Element_Interface{
         $options=array(
             'title'=>'Video',
             'description'=>'Button description',
-            'icon_class'=>'fa fa-youtube-play',
+            'icon_class'=>'fa fa-video-camera',
             'container'=>false,
             'has_content'=>false,
             'defaults'=>array(),

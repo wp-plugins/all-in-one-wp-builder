@@ -1,0 +1,50 @@
+.ve_dialog{
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 4px 4px 2px 2px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  display: none;
+  height: auto !important;
+  left: 50%;
+  margin-bottom: 20px;
+  min-height: 150px;
+  position: fixed;
+  top: 74px;
+  width: 600px;
+  z-index: 100000;
+  .ve_dialog-body{
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 10px 15px;
+    &:before {
+      content: " ";
+      display: table;
+    }
+  }
+  .ve_dialog-header{
+    background: #91c46b none repeat scroll 0 0;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 15px;
+    .ve_dialog-title{
+      color: #ffffff;
+      margin: 0 0 0 10px;
+    }
+    .ve_dialog-close{
+      color: #fff;
+      height: 29px;
+      line-height: 29px;
+      position: absolute;
+      right: 10px;
+      text-align: center;
+      top: 10px;
+      width: 29px;
+      .close-icon{
+        &:before{
+          font: 20px/29px "FontAwesome";
+        }
+      }
+    }
+  }
+}
+@import "dialog/edit_layout.less";

@@ -27,8 +27,8 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
         $this->support('CssEditor');
         $this->post_manager=$this->getVeManager()->getPostManager();
         $this->popup_manager=$this->getVeManager()->getPopupManager();
-        $this->getVeManager()->getResourceManager()->addCss('el-button',__DIR__.'/../../view/css/elements/buttons.css');
-        $this->enqueue_js('el-button',__DIR__.'/../../view/js/elements/ve-button.js');
+        $this->getVeManager()->getResourceManager()->addCss('el-button',dirname(__FILE__).'/../../view/css/elements/buttons.css');
+        $this->enqueue_js('el-button',dirname(__FILE__).'/../../view/js/elements/ve-button.js');
         $this->ready('ve_front.button.start();');
     }
     function element($instance,$content=''){
@@ -88,8 +88,8 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
             $dataAttr[]=sprintf('data-%s="%s"',$k,esc_attr($v));
         }
         //Move padding inside
-        $paddingNames = ['padding-top','padding-bottom','padding-left','padding-right'];
-        $paddingAttrs = [];
+        $paddingNames = array('padding-top','padding-bottom','padding-left','padding-right');
+        $paddingAttrs = array();
         foreach($paddingNames as $patt){
             if($padding=$this->css($patt)){
 

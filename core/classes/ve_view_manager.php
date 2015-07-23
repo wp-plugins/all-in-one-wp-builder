@@ -7,7 +7,8 @@ class VE_View_Manager extends VE_Manager_Abstract{
     var $allowExt=array('phtml','tpl');
     var $data=array();
     function bootstrap(){
-        $viewManagerConfig=$this->getVeManager()->get('config')['view_manager'];
+        $config=$this->getVeManager()->get('config');
+        $viewManagerConfig=$config['view_manager'];
         $this->templateMap=$viewManagerConfig['template_map'];
         $this->templateBaseDir=rtrim($viewManagerConfig['template_base_dir'],'/');
         $this->templateExt=$viewManagerConfig['template_ext'];

@@ -17,7 +17,7 @@ class VeCore_VeSlider extends Ve_Element implements VE_Element_Interface{
     function init(){
         $this->support('CssEditor');
 
-        $this->enqueue_js('el-slider',__DIR__.'/../../view/js/elements/ve-slider.js');
+        $this->enqueue_js('el-slider',dirname(__FILE__).'/../../view/js/elements/ve-slider.js');
         $this->ready('ve_front.slider.start();');
     }
     function element($instance,$content=''){
@@ -105,8 +105,8 @@ class VeCore_VeSlider extends Ve_Element implements VE_Element_Interface{
                 $post_thumbnail = ve_get_attachment_image( array( 'attach_id' => $attach_id, 'thumb_size' => $img_size ) );
             } else {
                 $post_thumbnail = array();
-                $post_thumbnail['thumbnail'] = '<img src="' . ve_resource_url( __DIR__.'/../../view/images/no_image.png' ) . '" />';
-                $post_thumbnail['p_img_large'][0] = ve_resource_url(  __DIR__.'/../../view/images/no_image.png' );
+                $post_thumbnail['thumbnail'] = '<img src="' . ve_resource_url( dirname(__FILE__).'/../../view/images/no_image.png' ) . '" />';
+                $post_thumbnail['p_img_large'][0] = ve_resource_url(  dirname(__FILE__).'/../../view/images/no_image.png' );
             }
 
             $thumbnail = $post_thumbnail['thumbnail'];

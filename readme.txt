@@ -12,26 +12,26 @@ Visually create your sale pages, landing pages... in WordPress with simple yet p
 
 == Description ==
 
-== A WordPress pages builder that so easy to use, even for beginners ==
-If you are looking for the best websites builder for WordPress, you should try this plugin out. With simple drag and drop tool, you can create really attractive landing pages in no time. This plugin will bring you a trully wysiwyg web builder experience. What you see when you compose your pages is what your visitor will see when they come to your WordPress site. The simple, easy website builder comes with AIO WP Builder makes the task of creating beautiful, highly customized pages in WordPress become simple and enjoyable.
+= A WordPress pages builder that so easy to use, even for beginners =
+If you are looking for the best websites builder for WordPress, you should try this plugin out. With simple drag and drop tool, you can create really attractive landing pages in no time. This plugin will bring you a trully wysiwyg web builder experience. What you see when you visually compose your pages is what your visitor will see when they come to your WordPress site. The simple, easy website builder comes with AIO WP Builder makes the task of creating beautiful, highly customized pages in WordPress become simple and enjoyable.
 
 
-You may wonder if do you have to know HTML, CSS to creates pages with this plugin? The answer is a big NO. All you need to do is to grab the elements and put in your pages. Have you ever played LEGO? You will find the same experience when you work with AIO WP Builder.
+You may wonder if do you have to know HTML, CSS to creates pages with this plugin? The answer is a big NO. All you need to do is to grab the elements and put in your pages. Have you ever played LEGO? You will find the same experience when you work with AIO WP Builder. Just download and find out if AIO WP Builder is the WordPress website builder you have been looking for.
 
-== It works on all Operating System ==
+= It works on all Operating System =
 This page builder is installed to your site as a plugin so it will work just fine on all operating system. It works on Mac, Windows, Linux...
 
-== The Page Builder that suits all your needs ==
+= The Page Builder that suits all your needs =
 You can use this plugin to make a simple website's page or complex long sale letter.
 
-== Forget about buiding a separate mobile site, your pages are now responsive ==
+= Forget about buiding a separate mobile site, your pages are now responsive =
 Built upon the power of the latest Twitter Bootstrap framework (3.3+), the pages you created works well on different devices. That means they are all responsive.
 
-== It works with all WordPress' templates & themes ==
+= It works with all WordPress' templates & themes =
 This one is a plugin, not a theme so you don't have to worry about changing your WordPress site's themes. It doesn't interfere with your themes at all. In fact, the pages it creates work well with all WordPress themes.
 
 
-== The free page builder that has no limit ==
+= The free page builder that has no limit =
 When working with default WordPress post, page creator, you will have many limits. You can't change the layout of the page, you cannot change the number of columns on a row... even if you know HTML and CSS.
 
 With AIO WP Builder, there is no limit. You have full control over your page's layout. You can even put custom CSS, JavaScript code to your page with ease. 
@@ -42,15 +42,22 @@ You can also embed the shortcode comes from other plugins, themes to pages you c
 
 Let the power of your creative mind shine with AIO WP Builder.
 
-== Go Pro ==
+= Go Pro =
 *	The version you have here is awesome, however, the PRO version is aswesome++
 You can create simple widgets then put it anywhere on your site
 
-You can create a ribbon popup and let it displays on your site when your visitors visit your site
+You can create a ribbon popup and let it displays on your site when your visitors visit your site.
+
+The pro version comes with much more widgets so you have more choices to create awesome, responsive WordPress pages.
+
+You have access to the rich collection of Google Fonts. Making awesome typography on your pages will not be hard anymore.
+
+You can also create landing pages templates then save it for use later. The reusable feature make it so easy to create once, use every where.
 
 You can create a splash page that appears when your visitors first visit your site and later, when they come back, they will not see it anymore.
 Come and find out more about the full power of AIO WP builder: <a href="http://allinonewpbuilder.com/">http://allinonewpbuilder.com/</a>
 
+Is this the best WordPress page builder? Who knows. Try it, experience the true drag and drop website builder experience then judge for yourself.
 
 
 == Installation ==

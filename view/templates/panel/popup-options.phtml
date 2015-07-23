@@ -1,0 +1,307 @@
+<?php
+/**
+ * @var VE_Editor $editor
+ * @var VE_View_Manager $this
+ */
+$post=$editor->getPost();
+
+$positionOptions=array(
+    'center'=>'Center',
+    'top-left'=>'Top left',
+    'top-right'=>'Top Right',
+    'bottom-left'=>'Bottom left',
+    'bottom-right'=>'Bottom Right'
+);
+$appearanceOptions=array(
+    ''=>'Default',
+    'center'=>'Center',
+);
+$placementOptions=array(
+    ''=>'None',
+    'all'=>'Whole site',
+    'post'=>'All posts',
+    'page'=>'All pages',
+    'category'=>'By Category',
+
+);
+$openOptions=array(
+    ''=>'Not open automatically',
+    'open_on_mouse_out'=>'Open when mouse out of page',
+    'open_with_delay'=>'Open after page loaded',
+);
+$getBackgroundStyleOptions=function ($current_value) {
+    $output = '<option value="">' . __( 'Theme defaults', 'visual_editor' ) . '</option>';
+    $styles = array(
+        __( "Cover", 'visual_editor' ) => 'cover',
+        __( 'Contain', 'visual_editor' ) => 'contain',
+        __( 'No Repeat', 'visual_editor' ) => 'no-repeat',
+        __( 'Repeat', 'visual_editor' ) => 'repeat'
+    );
+    foreach ( $styles as $name => $style ) {
+        $output .= '<option value="' . $style . '"'.selected($style,$current_value,false).'>' . $name . '</option>';
+    }
+    return $output;
+};
+$popupOptionList=$this->getVeManager()->getListTableManager()->getTable('VE_PopupOption_List_Table',array('screen'=>'ve-list-popup-options'));
+$popupOptionList->prepare_items();
+
+$popups = get_posts(array(
+    'post_type' => 've-popup',
+    'posts_per_page' => -1,
+    'meta_key' => '_use_ve',
+    'meta_value' => '1',
+    'post_status' => array('publish')));
+$popupOptions = array();
+
+foreach($popups as $p){
+    $draf = "";
+    if ($p->post_status == "draft")
+    {
+        $draf = " <b>(Draft)</b>";
+    }
+    $poptions = get_post_meta($p->ID,'_ve_poptions',true);
+    if(!is_array($poptions))
+    {
+        $poptions = array();
+    }
+    $popupOptions[$p->ID] = $p->post_title . $draf . ' (' . count($poptions) .' options)';
+}
+?>
+<a href="#TB_inline?width=600&height=550&inlineId=ve-popup-options" title="Popup Options" class="thickbox">Popup Options</a>
+<div id="ve-popup-options" class="hidden">
+    <form id="ve-popup-options-form" class="ve-ajax-form ve-popup-settings" data-update-values="1">
+        <input type="hidden" name="action" value="ve_add_popup_option"/>
+
+        <div class="ve-ui-tabs">
+            <ul>
+                <li><a id="options_btn" href="#popup-setting-tab2">Options</a></li>
+                <li><a data-edit-popup-option="true" href="#popup-setting-tab1" style="display: none;">Edit</a></li>
+                <li><a id="add_new_btn" href="#popup-setting-tab1">Add new</a></li>
+            </ul>
+
+            <div id="popup-setting-tab1" class="edit-poptions">
+                <input type="hidden" name="option_id" value="0"/>
+                <p class="ve_row">
+                    <label class="ve_col-sm-3" for="ve_poption_popup">Popup:</label>
+                    <select name="popup_id" id="ve_poption_popup" class="ve_col-sm-4">
+                        <?php foreach($popupOptions as $value=>$title){
+                            printf('<option value="%s">%s</option>',$value,$title);
+                        }?>
+                    </select>
+                    <span class="popup_title ve_col-sm-4" style="display:none;"></span>
+                </p>
+                <p class="ve_row">
+                    <label for="position" class="ve_col-sm-3">Popup Position:</label>
+                    <select name="position" id="position" class="ve_col-sm-3">
+                        <?php foreach($positionOptions as $value=>$title){
+                            printf('<option value="%s"%s>%s</option>',$value,selected($value,$post->position,false),$title);
+                        }?>
+                    </select>
+
+                </p>
+
+                <p class="small-input" data-show-if="appearance" data-show-value="center" data-compare="!=">
+                    <strong>Offset:</strong><br/>
+
+                    <label for="top">Top:</label>
+                    <input class="" type="text" name="top" value="">
+
+                    <label for="left">Left:</label>
+                    <input type="text" name="left" value="">
+
+                    <label for="bottom">Bottom:</label>
+                    <input type="text" name="bottom" value="">
+
+                    <label for="right">Right:</label>
+                    <input type="text" name="right" value="">
+                    <span class="clearfix"></span>
+                </p>
+                <p  class="ve_row">
+                    <label for="placement" class="ve_col-sm-3">Placement:</label>
+                    <select name="placement" id="placement" class="ve_col-sm-3">
+                        <?php foreach($placementOptions as $value=>$title){
+                            printf('<option value="%s"%s>%s</option>',$value,selected($value,$post->placement,false),$title);
+                        }?>
+                    </select>
+
+                </p>
+                <div class="ve_row" data-show-if="placement" data-show-value="category">
+                    <div class="ve_col-sm-12">
+                        <label for="popup_category">Category:</label><br>
+                        <select id="popup_category" multiple="multiple" name="popup_category[]">
+                            <?php
+                                $categories=get_categories();
+                                foreach($categories as $category){
+                                    printf('<option value="%s"%s>%s</option>',$category->term_id,selected(in_array($category->term_id,(array)$post->popup_category),true,false),$category->cat_name.' ('.$category->category_count.')');
+                                }
+                            ?>
+                        </select>
+                        <script type="text/javascript">
+                            jQuery("#popup_category").select2({
+                                width:"360"
+                            });
+                        </script>
+                    </div>
+                </div>
+
+                <div class="ve_row" data-show-if="placement" data-show-value="post">
+                    <div class="ve_col-sm-12">
+                        <label for="popup_post">Post(limit to some post if you want):</label><br>
+                        <select id="popup_post" multiple="multiple" name="popup_post[]">
+                            <?php if($post->popup_post){
+                                foreach($post->popup_post as $post_id){
+                                    $post=get_post($post_id);
+                                    printf('<option value="%s" selected="selected">%s</option>',$post_id,$post->post_title);
+                                }
+                            }?>
+                        </select>
+                        <script type="text/javascript">
+                            jQuery("#popup_post").select2({
+                                width:"360",
+                                ajax: {
+                                    url: ajaxurl,
+                                    dataType: 'json',
+                                    delay: 250,
+                                    data: function (params) {
+                                        return {
+                                            q: params.term, // search term
+                                            page: params.page,
+                                            action:'ve_suggest',
+                                            type:'post'
+                                        };
+                                    },
+                                    processResults: function (data, page) {
+                                        // parse the results into the format expected by Select2.
+                                        // since we are using custom formatting functions we do not need to
+                                        // alter the remote JSON data
+                                        return {
+                                            results: data
+                                        };
+                                    },
+                                    cache: true
+                                },
+                                minimumInputLength: 1
+
+                            });
+                        </script>
+                    </div>
+                </div>
+
+                <div class="ve_row" data-show-if="placement" data-show-value="page">
+                    <div class="ve_col-sm-12">
+                        <label for="popup_page">Page(limit to some page if you want):</label><br>
+                        <select id="popup_page" multiple="multiple" name="popup_page[]">
+                            <?php if($post->popup_page){
+                                foreach($post->popup_page as $post_id){
+                                    $post=get_post($post_id);
+                                    printf('<option value="%s" selected="selected">%s</option>',$post_id,$post->post_title);
+                                }
+                            }?>
+                        </select>
+                        <script type="text/javascript">
+                            jQuery("#popup_page").select2({
+                                width:"360",
+                                ajax: {
+                                    url: ajaxurl,
+                                    dataType: 'json',
+                                    delay: 250,
+                                    data: function (params) {
+                                        return {
+                                            q: params.term, // search term
+                                            page: params.page,
+                                            action:'ve_suggest',
+                                            type:'page'
+                                        };
+                                    },
+                                    processResults: function (data, page) {
+                                        // parse the results into the format expected by Select2.
+                                        // since we are using custom formatting functions we do not need to
+                                        // alter the remote JSON data
+                                        return {
+                                            results: data
+                                        };
+                                    },
+                                    cache: true
+                                },
+                                minimumInputLength: 1
+                            });
+                        </script>
+                    </div>
+                </div>
+
+
+                <span class="clearfix"></span>
+
+
+                <span class="clearfix"></span>
+                <p class="ve_row">
+                    <label for="open" class="ve_col-sm-4">Popup Open:</label>
+                    <select name="open" id="open" class="ve_col-sm-4">
+                        <?php foreach($openOptions as $value=>$title){
+                            printf('<option value="%s"%s>%s</option>',$value,selected($value,$post->open,false),$title);
+                        }?>
+                    </select>
+
+                </p>
+
+                <div class="ve_row" data-show-if="open" data-show-value="open_with_delay">
+                    <label class="ve_col-sm-4" for="delay">Delay timer(in second):</label>
+                    <input class="ve_col-sm-4" type="number" name="delay" id="delay" value="<?php echo absint($post->delay);?>"/>
+                </div>
+                <p class="ve_row">
+                    <label class="ve_col-sm-4" for="re-open">Re-open after</label>
+                    <input class="ve_col-sm-4" type="number" name="inactive" id="re-open" value="<?php echo absint($post->inactive);?>"/> days
+                </p>
+                <?php //End tab 1;?>
+            </div>
+            <div id="popup-setting-tab2" class="">
+                <h3>List Options</h3>
+                <div class="ve-list-table">
+                    <?php $popupOptionList->views(); ?>
+                    <?php $popupOptionList->display();?>
+                </div>
+
+            </div>
+
+        </div>
+
+        <p id="submit_btn" class="form-control submit" style="display: none">
+            <input type="submit" value="Submit" class="save"/>
+        </p>
+        <script type="text/javascript">
+            jQuery('#add_new_btn').on('click',function(){
+
+            });
+            jQuery('#options_btn').on('click',function(){
+                jQuery('#submit_btn').hide();
+            });
+            jQuery('.option_filter a').on('click',function(){
+                var filter = jQuery(this).data('filter');
+                if(filter != "") {
+                    jQuery('.option-item').hide();
+                    jQuery('.option-item.' + filter).show();
+                }
+                else
+                {
+                    jQuery('.option-item').show();
+                }
+                return false;
+            });
+            ve.add_filter('ajax_form_data',function(data){
+                if(data.action=='ve_delete_popup_option'){
+                    if (!confirm('Are you sure to delete this option')) {
+                        return false;
+                    }
+                }
+                return data;
+            });
+            ve.add_action('ajax_form_done',function(action,req,res,form){
+                if(action=='ve_delete_popup_option'){
+                    jQuery(form.data('this')).parent().remove();
+                }
+            })
+
+            </script>
+
+    </form>
+</div>

@@ -1,0 +1,49 @@
+.ve_widget_right{
+    display: inline;
+    float: right;
+}
+.ve_widget_left{
+    display: inline;
+    float: left;
+}
+.ve_widget_center{
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+.ve_align_right{
+  text-align: right;
+}
+.ve_align_center{
+  text-align: center;
+}
+
+.ve_row.ve_row-no-padding{
+    .ve_col{
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+img{
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+}
+.video-container {
+  height: 0;
+  padding-bottom: 56.25%;
+  padding-top: 25px;
+  position: relative;
+}
+.lt-ie8 .video-container {
+  height: auto;
+  max-width: none;
+}
+.video-container iframe, .video-container object, .video-container embed {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+@import "popup.less";

@@ -31,7 +31,7 @@ var ve_popup=ve_popup||{};
             if(data.open){
                 switch (data.open){
                     case 'open_on_mouse_out':
-                        $(document).on('mouseleave',function(){popup.open($popup)});
+                        $(document).on('mouseleave',function(){popup.open($popup,{inactive:300})});
                         break;
                     case 'open_with_delay':
                         var delay=parseInt(data.delay)*1000;
@@ -110,7 +110,7 @@ var ve_popup=ve_popup||{};
             popup.open(selector);
         }
     };
-    popup.open=function(selector){
+    popup.open=function(selector,extraData){
         if(popup.showing)
             return false;
         if(!isNaN(selector)){//is number
@@ -124,8 +124,12 @@ var ve_popup=ve_popup||{};
         if(popup.isDone(selector)){//popup done, don't open again
             return false;
         }
+        extraData=extraData||{};
         var data=$popup.data('popup'),
             popup_id=$popup.data('popup-id');
+        if(extraData){
+            _.extend(data,extraData);
+        }
         if(data.inactive){
             var last_open=popup.data.get('last_open_'+popup_id);
             var inactive=data.inactive*86400000;

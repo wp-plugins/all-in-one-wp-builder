@@ -12,6 +12,7 @@ class VeCore_VeWpTagCloud extends Ve_Element implements VE_Element_Interface{
             'icon_class'=>'fa fa-tags',
             'container'=>false,
             'has_content'=>false,
+            'group'=>'wp',
             'defaults'=>array(),
 
         );

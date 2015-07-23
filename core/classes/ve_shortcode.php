@@ -23,17 +23,17 @@ class VE_ShortCode extends VE_Manager_Abstract{
     }
     function configureShortCodeEditor(){
         // add new buttons
-        $register_buttons=function ($buttons) {
-            array_push($buttons, 've_popup', 've_widget');
+        $register_buttons=create_function('$buttons', '
+            array_push($buttons, \'ve_popup\', \'ve_widget\');
             return $buttons;
-        };
+        ');
         add_filter('mce_buttons', $register_buttons);
 
 
-        $register_tinymce_javascript=function($plugin_array) {
-            $plugin_array['ve_shortcodes'] = ve_resource_url(VE_VIEW.'/js/tinymce/plugins/widget-popup-plugin.js');
+        $register_tinymce_javascript=create_function('$plugin_array','
+            $plugin_array[\'ve_shortcodes\'] = ve_resource_url(VE_VIEW.\'/js/tinymce/plugins/widget-popup-plugin.js\');
             return $plugin_array;
-        };
+        ');
         add_filter('mce_external_plugins', $register_tinymce_javascript);
 
         add_action('after_wp_tiny_mce',array($this,'widget_popup_dialog'));

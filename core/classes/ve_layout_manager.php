@@ -23,7 +23,7 @@ class VE_Layout_Manager extends VE_Manager_Abstract{
     function templateCheck(){
         $use_ve = get_post_meta(get_the_ID(), '_use_ve', true);
         $page_template=get_page_template_slug();
-        if($use_ve&&$page_template===''){
+        if($use_ve&&$page_template==='' || is_ve()){
             $this->useVeTemplate=true;
         }
     }
@@ -37,6 +37,7 @@ class VE_Layout_Manager extends VE_Manager_Abstract{
         }
         return $template;
     }
+
     function wpHead(){
         global $wp_styles,$wp_scripts;
         /**

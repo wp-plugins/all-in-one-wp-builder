@@ -230,7 +230,7 @@
   float: left;
   height: 80px;
   width: 80px;
-  background: #f5f5f5 url("img/add.png") no-repeat center center;
+  background: #dddddd url("img/add.png") no-repeat center center;
   border: 1px solid #DFDFDF;
   font-size: 0;
   color: #F5F5F5;
@@ -556,6 +556,44 @@
   height: auto;
   max-height: 450px;
 }
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content.ve_row {
+  margin: 0;
+}
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content input:focus {
+  outline: none;
+  box-shadow: none;
+}
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content input,
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content textarea,
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content select {
+  border-radius: 4px;
+  border: 2px solid #91c46b;
+  color: #877;
+}
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content input.small,
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content textarea.small,
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content select.small {
+  height: 30px;
+  width: 40px;
+}
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content input.medium,
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content textarea.medium,
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content select.medium {
+  height: 35px;
+  width: 120px;
+}
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content input.long,
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content textarea.long,
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content select.long {
+  height: 35px;
+  width: 200px;
+}
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content input.xlong,
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content textarea.xlong,
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content select.xlong {
+  height: 40px;
+  width: 300px;
+}
 .edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content .ve_input_block {
   margin: 1em 0;
 }
@@ -584,7 +622,7 @@
 .edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content .element-form-tabs .ui-tabs-panel {
   margin-left: 120px;
   max-height: 420px;
-  overflow-y: auto ;
+  overflow-y: auto;
 }
 .edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content .element-form-tabs .ui-tabs-panel label {
   min-width: 140px;
@@ -8041,7 +8079,6 @@
   text-decoration: none;
   text-align: center;
   line-height: 40px;
-  height: 40px;
   padding: 0 40px;
   margin: 0;
   display: inline-block;
@@ -10673,14 +10710,18 @@
 .edit-visual .ve_css-editor .ve_layout-onion .ve_margin {
   border: 1px dashed #bababa;
   margin: 1px;
+  background: #fff;
 }
 .edit-visual .ve_css-editor .ve_layout-onion .ve_margin .ve_border {
   border: 1px solid #bababa;
-  background: #f2f2f2;
+  background: #ffffff;
+}
+.edit-visual .ve_css-editor .ve_layout-onion .ve_margin .ve_border label {
+  color: #000;
 }
 .edit-visual .ve_css-editor .ve_layout-onion .ve_margin .ve_border .ve_padding {
   border: 1px solid #bababa;
-  background: #e7e7e7;
+  background: #fff;
 }
 .edit-visual .ve_css-editor .ve_layout-onion .ve_margin .ve_border .ve_padding .ve_content {
   border: 1px solid  #bababa;
@@ -10690,16 +10731,40 @@
   font-size: 10px;
   line-height: 11px;
   box-sizing: border-box;
+  background: #000;
 }
 .edit-visual .ve_css-editor .ve_layout-onion .ve_margin .ve_border .ve_padding .ve_content i {
   margin: 8px auto;
-  background: transparent url(img/logo_ve.png) center center no-repeat;
+  background: #1e2226 url(../../images/logo.png) center center no-repeat;
+  -webkit-background-size: contain ;
+  background-size: contain;
   display: block;
   width: 32px;
   height: 32px;
 }
 .edit-visual .ve_css-editor .ve_layout-onion .ve_active {
   background-color: #00aef0 !important;
+}
+.edit-visual .ve_css-editor .ve_settings h3 {
+  font-style: normal;
+  font-weight: normal;
+  margin: 0 0 5px 0;
+}
+.edit-visual .ve_css-editor .ve_settings span.label {
+  font-style: italic;
+}
+.edit-visual .ve_css-editor .ve_settings .border-settings,
+.edit-visual .ve_css-editor .ve_settings .background-settings {
+  margin-left: 30px ;
+}
+.edit-visual .ve_css-editor .ve_settings .border-settings {
+  margin-bottom: 10px;
+}
+.edit-visual .ve_css-editor .ve_settings .ve_input_block {
+  margin: 0!important;
+}
+.edit-visual .ve_css-editor .ve_settings .ve_input_block ul {
+  margin: 0;
 }
 .edit-visual .ve_css-editor .ve_settings .ve_background-image {
   margin-bottom: 10px;

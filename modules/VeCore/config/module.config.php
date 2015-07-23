@@ -8,7 +8,7 @@ return array(
     'resources'=>array(
         'ElementsInit'=>array(
             'js'=>array(
-                //array('init',__DIR__.'/../view/js/init.js',false,VE_VERSION,true),
+                //array('init',dirname(__FILE__).'/../view/js/init.js',false,VE_VERSION,true),
 
                 ),
         ),

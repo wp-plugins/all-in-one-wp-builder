@@ -14,7 +14,15 @@ var ve=ve||parent.ve;
 var md5=md5||ve.php.md5;
 (function(iframe,$) {
 
-
+    iframe.init=function(){
+        var excludeScripts=['jquery-core','jquery-migrate'],ls_rc,i;
+        for(i in excludeScripts) {
+            ls_rc = 'load-script:' + excludeScripts[i];
+            if(!iframe.loaded_script[window.md5(ls_rc)]) {
+                iframe.loaded_script[window.md5(ls_rc)] = ls_rc;
+            }
+        }
+    };
     iframe.startSorting = function() {
         $('html').addClass('ve_sorting');
     };
@@ -332,5 +340,6 @@ var md5=md5||ve.php.md5;
         ve_iframe_load();
 
     });
+    iframe.init();
 
 })(ve_iframe,window.jQuery);

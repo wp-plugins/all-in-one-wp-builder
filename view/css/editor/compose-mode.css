@@ -23,9 +23,6 @@
 .ve_sorting .ve_element .ve_element-ve_col .ui-sortable {
   min-height: 100px;
 }
-.ve_element-ve_row {
-  margin-bottom: 20px;
-}
 .ve_element-ve_row:hover .ve_row {
   outline: 1px dashed #00c800 !important;
 }

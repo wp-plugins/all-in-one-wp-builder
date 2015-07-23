@@ -33,6 +33,8 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
     }
     function element($instance,$content=''){
         $instance=shortcode_atts(array(
+            'icon'=>'',
+            'icon_right'=>'',
             'class'=>'',
             'value'=>'',
             'style'=>'',
@@ -99,7 +101,20 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
         }
         $paddingAttrs = esc_attr(join(' ',$paddingAttrs));
         $dataAttr=join(' ',$dataAttr);
-        printf('<div style="text-align: %4$s"><button style="%5$s" class="ve_el-button %1$s" value="%2$s" %3$s>%2$s</button></div>',$btnClass,$instance['value'],$dataAttr,$instance['align'], $paddingAttrs);
+
+        $icon='';
+        $value_with_icon=$instance['value'];
+        if($instance['icon']){
+            $icon_class='ve-button-icon fa fa-'.$instance['icon'];
+            $icon=sprintf('<i class="%s"></i>',$icon_class);
+            if($instance['icon_right']){
+                $value_with_icon=$value_with_icon.$icon;
+            }else{
+                $value_with_icon=$icon.$value_with_icon;
+            }
+
+        }
+        printf('<button style="%5$s" class="ve_el-button %1$s" value="%2$s" %3$s>%6$s</button>',$btnClass,$instance['value'],$dataAttr,$instance['align'], $paddingAttrs,$value_with_icon);
         if($popup&&$link=='popup'&&!ve_is_iframe()&&!ve_is_editor()) {
             //echo $this->popup_manager->getPopup($popup,array('open'=>''));
             //$this->popup_manager->popupScript();
@@ -114,7 +129,8 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
             'color'=>'',
             'shape'=>'',
             'size'=>'',
-
+            'icon'=>'',
+            'icon_right'=>'',
             'link'=>'',
             'link_post'=>'',
             'link_popup'=>'',
@@ -187,6 +203,71 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
         <div class="ve_input_block">
             <label for="<?php echo $this->get_field_id('value');?>">Text:</label>
             <input class="medium" value="<?php echo $instance['value'];?>" name="<?php echo $this->get_field_name('value');?>" id="<?php echo $this->get_field_id('value');?>">
+        </div>
+
+        <div class="ve_input_block">
+            <label for="<?php $this->field_id('icon');?>">Icon:</label>
+            <select id="<?php $this->field_id('icon');?>" name="<?php $this->field_name('icon');?>">
+                <?php $icons=get_awesome_icon_list();
+                $icons=$icons['filters'];
+                foreach($icons as $icon=>$filter){
+                    ?>
+                    <option value="<?php echo $icon;?>"<?php selected($icon,$instance['icon']);?>><?php echo $icon;?></option>
+                    <?php
+                }
+                ?>
+
+            </select>
+            <script type="application/javascript">
+                (function($) {
+                    var icons=<?php echo json_encode($icons);?>;
+                    var last_search;
+                    var matched=[];
+                    var formatState=function (state) {
+                        if (!state.id) {
+                            return state.text;
+                        }
+                        var $state = $(
+                            '<span><i class="fa fa-' + state.element.value.toLowerCase() + '"></i> ' + state.text + '</span>'
+                        );
+                        return $state;
+                    };
+                    $("#<?php $this->field_id('icon');?>").select2({
+                        width:120,
+                        matcher: function (params, data) {
+                            // If there are no search terms, return all of the data
+                            if ($.trim(params.term) === '') {
+                                return data;
+                            }
+
+                            // `params.term` should be the term that is used for searching
+                            // `data.text` is the text that is displayed for the data object
+
+                            if(params.term!=last_search) {//new search
+                                matched=[];
+                                $.each(icons, function (icon, filter) {
+                                    if (filter.indexOf(params.term) > -1) {
+                                        matched.push(icon);
+                                    }
+                                });
+                                last_search=params.term;
+                            }
+                            if(matched.indexOf(data.text)>-1){
+                                return data;
+                            }
+
+
+                            // Return `null` if the term should not be displayed
+                            return null;
+                        },
+                        templateResult: formatState,
+                        allowClear: true,
+                        placeholder: "Select an icon",
+                        templateSelection: formatState
+                    });
+                })(jQuery);
+            </script>
+            <label><input name="<?php $this->field_name('icon_right');?>" value="1" type="checkbox"<?php checked($instance['icon_right']);?>> Right</label>
         </div>
 
         <div class="ve_input_block">
@@ -340,17 +421,7 @@ class VeCore_VeButton extends Ve_Element implements VE_Element_Interface{
                 }?>
             </select>
         </div>
-        <div class="ve_input_block">
-            <label for="<?php $this->field_id('align');?>">
-                Button Align:
-            </label>
-            <select class="medium" id="<?php $this->field_id('align');?>" name="<?php $this->field_name('align');?>">
-                <?php foreach($align as $o_value=>$o_title){
-                    $o_title=ucfirst($o_title);
-                    printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$balign,false),$o_title);
-                }?>
-            </select>
-        </div>
+
         <div class="ve_element_preview" style="right: 20px;
 position: absolute;
 top: 80px;

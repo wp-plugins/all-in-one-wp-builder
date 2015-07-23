@@ -2353,3 +2353,9 @@
     line-height: 24px;
     padding: 0 24px;
 }
+.ve-button-icon{
+    line-height: 40px;
+}
+.icon-alignright{
+    float:right;
+}

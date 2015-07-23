@@ -51,6 +51,8 @@ return array(
                 array('select2',dirname(__FILE__).'/../view/libraries/select2/css/select2.min.css',array(),VE_VERSION),
                 array('editor',dirname(__FILE__).'/../view/css/editor/editor.css'),
                 array('tooltipster',dirname(__FILE__).'/../view/css/tooltipster.css'),
+                array('custom_ui',dirname(__FILE__).'/../view/css/custom_ui.css'),
+                array('form_ui',dirname(__FILE__).'/../view/css/forms-min.css')
 
             ),
             'eJs'=>array(
@@ -60,6 +62,7 @@ return array(
                 array('ve_jqueryserializeobject',dirname(__FILE__).'/../view/libraries/jquery.serialize-object.js',array(),VE_VERSION),
                 array('sass',dirname(__FILE__).'/../view/libraries/sass/sass.js',array(),true),
                 array('tooltipster',dirname(__FILE__).'/../view/js/jquery.tooltipster.min.js','jquery'),
+                array('locojs',dirname(__FILE__).'/../view/js/editor/local.js', 'jquery'),
                 array('ve_define',dirname(__FILE__).'/../view/js/editor/ve_define.js',
                     array(
                         'jquery',
@@ -108,10 +111,12 @@ return array(
             'js'=>array(),
             'css'=>array(
                 array('global',dirname(__FILE__).'/../view/css/global.css'),
+                array('animate',dirname(__FILE__).'/../view/css/animate.css'),
                 array('ve-style',dirname(__FILE__).'/../view/css/style.css'),
             ),
             'eCss'=>array(
                 array('global',dirname(__FILE__).'/../view/css/global.css'),
+                array('animate',dirname(__FILE__).'/../view/css/animate.css'),
             ),
 
         )

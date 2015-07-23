@@ -6,7 +6,7 @@ class VeCore_VeVideo extends Ve_Element implements VE_Element_Interface{
         $options=array(
             'title'=>'Video',
             'description'=>'Button description',
-            'icon_class'=>'fa fa-video-camera',
+            'icon_class'=>'fa fa-youtube-play',
             'container'=>false,
             'has_content'=>false,
             'defaults'=>array(),
@@ -21,7 +21,7 @@ class VeCore_VeVideo extends Ve_Element implements VE_Element_Interface{
         $title=$link=$class='';
         extract( shortcode_atts( array(
             'title' => '',
-            'link' => 'http://vimeo.com/92033601',
+            'link' => 'https://www.youtube.com/watch?v=pCQUMAD-Jao',
             'size' => ( isset( $content_width ) ) ? $content_width : 500,
             'class' => '',
             'css' => ''

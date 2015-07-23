@@ -225,7 +225,7 @@ var ve =ve || {};
             if(ve.update_title) data.post_title = this.getTitle();
             this.ajax(data, 'post.php')
                 .done(function(){
-                    ve.do_action('post_saved');
+                    ve.do_action('post_saved',data);
                 });
         },
 

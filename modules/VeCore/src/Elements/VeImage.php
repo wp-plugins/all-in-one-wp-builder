@@ -167,19 +167,21 @@ class VeCore_VeImage extends Ve_Element implements VE_Element_Interface
             <a class="ve-media-add-images-btn" href="#" title="Add image">Add image</a>
             <div class="ve_clearfix"></div>
         </div>
-        <div class="ve_input_block">
+        <div class="ve_input_block ve_col-xs-12">
             <label for="<?php $this->field_id('css_animation');?>">Css Animation</label>
             <br/>
-            <select id="<?php $this->field_id('css_animation');?>" name="<?php $this->field_name('css_animation');?>">
+
+            <select id="<?php $this->field_id('css_animation');?>" class="pure-input-1-2" name="<?php $this->field_name('css_animation');?>">
                 <?php foreach($css_animations as $o_value=>$o_title){
                     printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$css_animation,false),$o_title);
                 }?>
             </select>
+
         </div>
 
-        <p class="ve_input_block">
-            <label for="<?php $this->field_id('img_size');?>">Image size:</label>
-            <select name="<?php $this->field_name('img_size');?>" id="<?php $this->field_id('img_size');?>">
+        <p class="ve_input_block ve_col-xs-12">
+            <label for="<?php $this->field_id('img_size');?>">Image size:</label><br />
+            <select class="pure-input-1-2" name="<?php $this->field_name('img_size');?>" id="<?php $this->field_id('img_size');?>">
                 <?php
                 $allImgSizes=get_intermediate_image_sizes();
                 $allImgSizes[]='full';
@@ -191,16 +193,14 @@ class VeCore_VeImage extends Ve_Element implements VE_Element_Interface
                 ?>
             </select>
 
-            <span class="ve_description ve_clearfix">Enter image size. Example: "thumbnail", "medium", "large", "full" or other sizes defined by current theme. Alternatively enter image size in pixels: 200x100 (Width x Height). Leave empty to use "thumbnail" size.</span>
-
         </p>
         <p class="small-input" id="custom_size_setting">
             <strong>Custom Size:</strong><br/>
 
-            <label for="top">Width:</label>
+            <label for="top">Width:</label><br />
             <input class="" type="text" name="<?php $this->field_name('width');?>" value="<?php echo esc_attr($width);?>">
 
-            <label for="left">Height:</label>
+            <label for="left">Height:</label><br />
             <input type="text" name="<?php $this->field_name('height');?>" value="<?php echo esc_attr($height);?>">
         </p>
         <script type="text/javascript">
@@ -210,7 +210,7 @@ class VeCore_VeImage extends Ve_Element implements VE_Element_Interface
             }).on('select2:select',function(e){
                 if(jQuery(e.currentTarget).val() == "custom")
                 {
-                    jQuery('#custom_size_setting').show();
+                    jQuery(' #custom_size_setting').show();
                 }
                 else
                 {
@@ -226,20 +226,20 @@ class VeCore_VeImage extends Ve_Element implements VE_Element_Interface
 
         </script>
 
-        <div class="ve_input_block">
+        <div class="ve_input_block ve_col-xs-12">
             <label for="<?php $this->field_id('alignment');?>">Image alignment</label>
             <br/>
-            <select id="<?php $this->field_id('alignment');?>" name="<?php $this->field_name('alignment');?>">
+            <select class="pure-input-1-2" id="<?php $this->field_id('alignment');?>" name="<?php $this->field_name('alignment');?>">
                 <?php foreach($img_alignments as $o_value=>$o_title){
                     printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$alignment,false),$o_title);
                 }?>
             </select>
         </div>
 
-        <div class="ve_input_block">
+        <div class="ve_input_block ve_col-xs-12">
             <label for="<?php $this->field_id('style');?>">Image style</label>
             <br/>
-            <select id="<?php $this->field_id('style');?>" name="<?php $this->field_name('style');?>">
+            <select class="pure-input-1-2" id="<?php $this->field_id('style');?>" name="<?php $this->field_name('style');?>">
                 <?php foreach($img_styles as $o_value=>$o_title){
                     printf('<option value="%s"%s>%s</option>',$o_value,selected($o_value,$style,false),$o_title);
                 }?>

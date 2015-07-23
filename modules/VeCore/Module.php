@@ -19,6 +19,8 @@ class VeModule_VeCore{
     function additionalField(){
         require dirname(__FILE__).'/src/Fields/wp_widget_additional_fields.php';
         new Wp_Widget_Additional_Fields();
+        require dirname(__FILE__).'/src/Fields/align.php';
+        new VE_Core_Field_Align();
     }
     function localize_script(){
         wp_localize_script( 've_js-ve_define', 'i18nLocale', array(

@@ -1,0 +1,28 @@
+.ve_explain {
+    font-size: .9em;
+    font-style: italic;
+    color: #888;
+    padding: 0 20px;
+    margin: 0;
+}
+
+.pure-form h3 {
+    color: #333;
+    padding: 15px 0 5px;
+}
+.ve_ui_section {
+    padding-bottom: 20px;
+    padding-top: 10px;
+}
+.pure-form h4 {
+    color: #555;
+    padding: 10px 0 10px;
+}
+
+.image-bg {
+    display: none;
+}
+
+.adv-solid-bg {
+    display: none;
+}

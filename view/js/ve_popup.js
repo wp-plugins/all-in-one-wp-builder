@@ -143,6 +143,13 @@ var ve_popup=ve_popup||{};
         popup.close();//close all other popup
 
         $popup.removeClass('ve-hide').data('opened',true).show();
+        if(data.animation){
+            var $animationPart=$popup.find('.ve-popup-wrapper');
+            var animationClass='veani-'+data.animation+' veani-animated';
+            $animationPart.addClass(animationClass).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                $(this).removeClass(animationClass);
+            });
+        }
         popup.showing = true;
         if(popup_id){
             popup.data.set('last_open_'+$popup.data('popup-id'),Date.now());

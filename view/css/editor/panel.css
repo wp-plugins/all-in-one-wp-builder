@@ -200,6 +200,17 @@
 #ve-panel .ve-form-wrapper #ve-element-form .form-content .ve_input_block {
   margin: 1em 0;
 }
+#ve-panel .ve-form-wrapper #ve-element-form .form-content .ve_input_block .align-button {
+  cursor: pointer;
+  margin: 0 15px;
+  padding: 5px;
+}
+#ve-panel .ve-form-wrapper #ve-element-form .form-content .ve_input_block .align-button:nth-of-type(1) {
+  margin-left: 0;
+}
+#ve-panel .ve-form-wrapper #ve-element-form .form-content .ve_input_block .align-button.align-current {
+  background: #91c46b;
+}
 #ve-panel .ve-form-wrapper #ve-element-form .form-content .element-form-tabs {
   border-top-left-radius: 0;
   border-top-right-radius: 0;

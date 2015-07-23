@@ -479,7 +479,7 @@
   font-size: 12px;
 }
 .edit-visual #ve-panel .element-list .element-list-item div span.icon {
-  font-size: 32px;
+  font-size: 40px;
 }
 .edit-visual #ve-panel .ve-form-wrapper {
   height: auto;
@@ -567,7 +567,6 @@
 .edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content textarea,
 .edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content select {
   border-radius: 4px;
-  border: 2px solid #91c46b;
   color: #877;
 }
 .edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content input.small,
@@ -596,6 +595,17 @@
 }
 .edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content .ve_input_block {
   margin: 1em 0;
+}
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content .ve_input_block .align-button {
+  cursor: pointer;
+  margin: 0 15px;
+  padding: 5px;
+}
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content .ve_input_block .align-button:nth-of-type(1) {
+  margin-left: 0;
+}
+.edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content .ve_input_block .align-button.align-current {
+  background: #91c46b;
 }
 .edit-visual #ve-panel .ve-form-wrapper #ve-element-form .form-content .element-form-tabs {
   border-top-left-radius: 0;
@@ -9812,6 +9822,12 @@
   height: 24px;
   line-height: 24px;
   padding: 0 24px;
+}
+.edit-visual .ve_element_preview .ve-button-icon {
+  line-height: 40px;
+}
+.edit-visual .ve_element_preview .icon-alignright {
+  float: right;
 }
 .edit-visual #ve-preview {
   position: absolute;

@@ -192,6 +192,9 @@
     ve.add_action('load',function(){
         list=new ListOptions({el:$('.ve-list-popup-options').closest('.ve-list-table')});
     });
+    ve.add_action('post_saved',function(){
+       list.reloadPopupList();
+    });
     ve.add_action('ajax_form_done_ve_add_popup_option',function(req,response){
         list.setContent(response);
         list.reloadPopupList();

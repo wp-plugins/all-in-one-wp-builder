@@ -19,8 +19,10 @@ $openOptions=array(
     'open_with_delay'=>'Open after page loaded',
 );
 ?>
+
 <p>
-    <label>Select popup:</label>
+
+    <label class="ve_col-sm-3">Select popup:</label>
     <select name="ve_post_popup">
         <option value="">None</option>
         <?php foreach($popups as $popup){
@@ -40,7 +42,7 @@ $openOptions=array(
 </p>
 
 <p class="ve_row">
-    <label for="ve_popup_open" class="ve_col-sm-4">Popup Open:</label>
+    <label for="ve_popup_open" class="ve_col-sm-3">Popup Open:</label>
     <select name="ve_popup_open" id="ve_popup_open" class="ve_col-sm-4">
         <?php foreach($openOptions as $value=>$title){
             printf('<option value="%s"%s>%s</option>',$value,selected($value,$post->ve_popup_open,false),$title);

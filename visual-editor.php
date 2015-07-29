@@ -4,7 +4,7 @@ Plugin Name: AIO WP Builder
 Plugin URI: http://allinonewpbuilder.com/
 Description: AIO WP Builder
 Author: AIO WP Builder
-Version: 1.3
+Version: 1.4
 Author URI: http://allinonewpbuilder.com/
 */
 define('VE_DIR',dirname(__FILE__));

@@ -1,0 +1,45 @@
+<?php
+/**
+ * @var VE_License $license
+ */
+?>
+<?php if($license->getType()){?>
+    <div class="ve-licensed">
+        <p>Hi <b><?php echo $license->getEmail();?></b>,
+            you are using <strong><?php echo $license->getType();?></strong> version.
+            <a href="<?php echo add_query_arg('ve-action','logout');?>">Logout</a>
+        </p>
+        <ul>
+            <li><a href="<?php echo admin_url('edit.php?ve_action=ve_inline&post_type=page&post_id=new');?>">Create Pages</a></li>
+            <?php if($license->getType() == "ultimate") { ?>
+            <li><a href="<?php echo admin_url('edit.php?ve_action=ve_inline&post_type=ve-popup&post_id=new');?>">Create Popups</a></li>
+            <?php } ?>
+            <li><a href="<?php echo admin_url('edit.php?ve_action=ve_inline&post_type=ve-widget&post_id=new');?>">Create Widgets</a></li>
+        </ul>
+    </div>
+
+<?php }else{?>
+    <h3>Activate plugin</h3>
+    <span class="desc">
+        Please enter your license details to activate the plugin.
+    </span>
+    <div class="ve-admin-login">
+        <form class="ve-login-form" action="" method="post">
+            <table class="form-table">
+            <input type="hidden" name="ve-action" value="login">
+            <tr>
+                <th><label for="email">Email</label></th>
+                <td><input type="text" name="email" id="email"></td>
+            </tr>
+            <tr>
+                <th><label for="receipt">Receipt</label></th>
+                <td><input type="text" name="receipt" id="receipt"></td>
+            </tr>
+
+            </table>
+            <p class="submit">
+                <input class="button button-primary" type="submit" name="ve-login" value="Active">
+            </p>
+        </form>
+    </div>
+<?php }?>

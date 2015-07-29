@@ -26,3 +26,14 @@
 .adv-solid-bg {
     display: none;
 }
+
+.promo-area {
+    position: fixed;
+    bottom: 5px;
+    right: 5px;
+    z-index: 10000;
+    text-align: right;
+}
+.promo-area a {
+    display: block;
+}

@@ -44,7 +44,8 @@ class VE_Editor extends VE_Manager_Abstract{
 
     }
     function configure(){
-        add_action('init',array($this,'init'));
+        if($this->getVeManager()->getLicenseManager()->isLicensed())
+            add_action('init',array($this,'init'));
     }
     function init(){
         $this->addHooks();
@@ -136,15 +137,7 @@ class VE_Editor extends VE_Manager_Abstract{
 
 
 
-    function renderRowAction( $actions ) {
-        $post = get_post();
-        if ( $this->canUseEditor( $post->ID ) ) {
-            $actions['edit_ve'] = '<a
-		href="' . $this->getEditUrl( $post->ID ) . '">' . __( 'Edit with Visual Editor', 'visual_editor' ) . '</a>';
-        }
 
-        return $actions;
-    }
     function canUseEditor( $post_id = null ) {
         get_currentuserinfo();
         if(!$post_id){
@@ -425,7 +418,7 @@ class VE_Editor extends VE_Manager_Abstract{
 
 
     function setEditorTitle( $admin_title ) {
-        return sprintf( __( 'Edit %s with Visual Editor', 'visual_editor' ), $this->post_type->labels->singular_name );
+        return sprintf( __( 'Edit %s with AIO WP Builder', 'visual_editor' ), $this->post_type->labels->singular_name );
     }
     function editPostLink( $link,$id=0 ) {
         if ( $this->canUseEditor($id) ) {

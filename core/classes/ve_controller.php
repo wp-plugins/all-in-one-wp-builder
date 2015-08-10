@@ -254,11 +254,10 @@ class VE_Controller extends VE_Manager_Abstract{
             'posts_per_page' => -1,
             'meta_query' => array(
                 array(
-                    'key' => '_ve_poptions',
-                    'compare' => 'EXISTS'
+
                 )
             ),
-            'post_status' => array('publish')
+            'post_status' => array('publish','draft')
         );
 
 
@@ -270,9 +269,8 @@ class VE_Controller extends VE_Manager_Abstract{
             {
                 $draf = " <b>(Draft)</b>";
             }
-            $poptions = get_post_meta($p->ID,'_ve_poptions',true);
-            if(!is_array($poptions))
-            {
+            $poptions = get_post_meta($p->ID,'_ve_poptions',array());
+            if(!is_array($poptions)) {
                 $poptions = array();
             }
             $popupOptions[$p->ID] = $p->post_title . $draf . ' (' . count($poptions) .' options)';
@@ -280,7 +278,10 @@ class VE_Controller extends VE_Manager_Abstract{
         $results=array();
         if(isset($_POST['post_id'])) {
             $current_popup_id = absint($_POST['post_id']);
-            $poptions = get_post_meta($current_popup_id, '_ve_poptions', true);
+            $poptions = get_post_meta($current_popup_id, '_ve_poptions', array());
+            if(!is_array($poptions)){
+                $poptions=array();
+            }
             $positionOptions = array(
                 'center' => 'Center',
                 'top-left' => 'Top left',

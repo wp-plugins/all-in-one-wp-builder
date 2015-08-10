@@ -1,5 +1,6 @@
 <?php
 class VE_Admin extends VE_Manager_Abstract{
+    var $license;
     function bootstrap(){
         if(!is_ve()){
             add_action('admin_enqueue_scripts',array($this,'loadScriptsWpAdminOnly'));
@@ -7,11 +8,27 @@ class VE_Admin extends VE_Manager_Abstract{
         if(is_admin()){
             $this->adminHocks();
         }
+        $this->license=$this->getVeManager()->get('license');
 
     }
     function adminHocks(){
         add_action( 'admin_menu', array($this,'buildAdminMenus') );
         add_action('wp_loaded',array($this,'onWpLoaded'));
+        add_action('admin_init',array($this,'update'));
+    }
+    function update(){
+        if(isset($_GET['ve-action'])&&$_GET['ve-action']==='logout'){
+            $this->license->clear();
+            wp_redirect(remove_query_arg('ve-action'));
+            die;
+        }
+        if(isset($_POST['ve-action'])&&$_POST['ve-action']==='login'){
+            $email=isset($_POST['email'])?$_POST['email']:'';
+            $receipt=isset($_POST['receipt'])?$_POST['receipt']:'';
+            $this->license->check();
+            wp_redirect(remove_query_arg('ve-action'));
+            die;
+        }
     }
     function onWpLoaded(){
         $ve_pages=array('ve-posts','ve-pages');
@@ -32,12 +49,11 @@ class VE_Admin extends VE_Manager_Abstract{
 
     }
     function loadScriptsWpAdminOnly(){
-        wp_enqueue_script('ve-admin-admin',ve_resource_url(VE_VIEW.'/js/admin/admin.js',array('jQuery')));
+        wp_enqueue_script('ve-admin-admin',ve_resource_url(VE_VIEW.'/js/admin/admin.js'),array('jQuery'));
     }
     function buildAdminMenus(){
         add_menu_page( __( 'AIO WP Builder', 'visual_editor' ),  __( 'AIO WP Builder', 'visual_editor' ), 'manage_categories', 'visual-editor-admin', array($this,'adminDashboard'));
-        add_submenu_page( 'visual-editor-admin', __( 'Create Page', 'visual_editor' ), __( 'Create Page', 'visual_editor' ), 'manage_categories', 'edit.php?ve_action=ve_inline&post_type=page&post_id=new', null);
-
+      
     }
     function adminListPages(){
         $this->_adminListPosts('page');
@@ -49,11 +65,9 @@ class VE_Admin extends VE_Manager_Abstract{
         include VE_CORE.'/templates/list-posts.phtml';
     }
     function adminDashboard(){
-        ?>
-        <h2>Thanks for using AIO WP Builder</h2>
-        <p>We hope you enjoy the plugin.</p>
-        <p>If you need assistance or have suggestions, please let us know at luisrojo.ai@gmail.com</p>
-
-        <?php
+        $license=$this->license;
+        $this->license->check();
+        echo '<h1>All In One WP Builder</h1>';
+        include VE_CORE.'/templates/login.phtml';
     }
 }

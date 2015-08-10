@@ -229,7 +229,6 @@ class Ve_Element implements VE_Element_Interface{
      * @param $content
      */
     public function update( $atts,$content ) {
-        $this->_updated=true;
         if($this->features){
             foreach($this->features as $f){
                 $f->update($atts,$content);
@@ -247,7 +246,6 @@ class Ve_Element implements VE_Element_Interface{
      *
      */
     function element($instance,$content){
-
         if($widget=$this->getWpWidget()){
             $widget->_set(-1);
             $widget->widget($this->get_widget_args(),$instance);
@@ -312,7 +310,7 @@ class Ve_Element implements VE_Element_Interface{
         }
         $output= ob_get_clean();
         $this->the_instance();
-        $output= $this->get_before() .$this->element_wrapper_start($atts,$content).$output.$this->element_wrapper_end($atts,$content).$this->get_after();
+        $output= $this->before().$this->element_wrapper_start($atts,$content).$output.$this->element_wrapper_end($atts,$content).$this->after();
         return $output;
     }
     /**
@@ -349,10 +347,10 @@ class Ve_Element implements VE_Element_Interface{
     function get_inline_script(){
         return $this->inlineScript;
     }
-    function element_wrapper_start($atts,$content=''){
+    function element_wrapper_start($instance,$content=''){
         return sprintf('<div %s>',$this->get_attributes());
     }
-    function element_wrapper_end(){
+    function element_wrapper_end($instance,$content=''){
         return '</div>';
     }
 
@@ -501,17 +499,18 @@ class Ve_Element implements VE_Element_Interface{
         $this->attributes[$this->instance]['style']=$this->css[$this->instance];
         return $this;
     }
-    function get_before(){
-        return isset($this->before[$this->instance])?$this->before[$this->instance]:'';
-    }
-    function get_after(){
-        return isset($this->after[$this->instance])?$this->after[$this->instance]:'';
-    }
-    function before($before=null){
+
+    function before($before=VE_DEFAULT_FUNCTION_PARAM){
+        if($before===VE_DEFAULT_FUNCTION_PARAM){
+            return isset($this->before[$this->instance])?$this->before[$this->instance]:'';
+        }
         $this->before[$this->instance]=$before;
         return $this;
     }
-    function after($after=null){
+    function after($after=VE_DEFAULT_FUNCTION_PARAM){
+        if($after===VE_DEFAULT_FUNCTION_PARAM){
+            return isset($this->after[$this->instance])?$this->after[$this->instance]:'';
+        }
         $this->after[$this->instance]=$after;
         return $this;
     }
@@ -537,6 +536,7 @@ class Ve_Element implements VE_Element_Interface{
         return $this->scripts->do_items();
     }
     function _form($atts,$content,$args){
+        do_action('ve_element_form_before',$this,$atts,$content,$args);
         $this->form($atts,$content,$args);
         do_action('ve_element_form',$this,$atts,$content,$args);
     }

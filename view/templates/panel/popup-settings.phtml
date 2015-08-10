@@ -29,7 +29,7 @@ $openOptions=array(
     'open_on_mouse_out'=>'Open when mouse out of page',
     'open_with_delay'=>'Open after page loaded',
 );
-$getBackgroundStyleOptions=function ($current_value) {
+function getBackgroundStyleOptions($current_value) {
     $output = '<option value="">' . __( 'Theme defaults', 'visual_editor' ) . '</option>';
     $styles = array(
         __( "Cover", 'visual_editor' ) => 'cover',
@@ -50,7 +50,7 @@ $poptions = get_post_meta($post->ID,'_ve_poptions',true);
 ?>
 <a href="#TB_inline?width=600&height=550&inlineId=ve-popup-settings" title="Popup Settings" class="thickbox">Popup Setting</a>
 <div id="ve-popup-settings" class="hidden">
-    <form class="ve-ajax-form ve-popup-settings" data-update-values="1">
+    <form class="ve-ajax-form ve-popup-settings pure-form" data-update-values="1">
         <input type="hidden" name="action" value="ve_update_post_meta"/>
         <div class="ve-ui-tabs">
             <ul>
@@ -82,48 +82,83 @@ $poptions = get_post_meta($post->ID,'_ve_poptions',true);
             </div>
             <div id="popup-setting-tab2" class="">
                 <?php $img_ids=$post->background_image;?>
-                <h2>Overlay:</h2>
-                <div class="ve_row">
+                <div class="ve_row ve_ui_section">
                     <div class="ve_col-sm-12">
+                        <h3>Animation:</h3>
+                        <p class="ve_explain">Type of animation applied to your popup when it appears</p>
+                        <div class="ve_col-sm-6">
 
-                    </div>
-                    <div class="ve_col-sm-4">
-                        <label>Background:</label>
-                        <div class="color-group">
-                            <input type="text" name="background_color" value="<?php echo $post->background_color;?>" class="ve_color-control">
-                        </div>
-                    </div>
-
-                    <div class="ve_col-sm-4">
-                        <label>Opacity</label>
-                        <div>
-                            <input type="number" step="0.01" name="background_opacity" value="<?php echo $post->background_opacity;?>">
-                        </div>
-                    </div>
-                </div>
-                <div class="ve_row">
-                    <div class="ve_col-sm-4">
-                        <div class="ve_input_block">
-                            <input type="hidden" class="ve-media-selected-images-ids" name="background_image" value="<?php echo $img_ids;?>"/>
-                            <div class="ve-media-selected-images">
-                                <ul class="ve-media-selected-images-list">
-                                    <?php echo fieldAttachedImages(explode(',',$img_ids));?>
-                                </ul>
-                            </div>
-                            <a class="ve-media-add-images-btn" href="#" title="Add image">Add image</a>
-                        </div>
-                    </div>
-                    <div class="ve_col-sm-6">
-                        <div class="ve_background-style" style="margin-top: 20px">
-                            <select name="background_style" class="ve_background-style">
-                                <?php
-                                echo $getBackgroundStyleOptions($post->background_style);
-                                ?>
+                            <select name="animation" id="animation" class="pure-input-1-2">
+                                <?php ve_animation_select($post->animation)?>
                             </select>
                         </div>
+                        <div class="ve_col-sm-6">
+                            <div id="popup-test-animation">demo</div>
+                        </div>
+                        <script type="text/javascript">
+                            (function($){
+                                var testAnimation=function(x){
+                                    x='veani-'+x;
+                                    $('#popup-test-animation').removeClass().addClass(x + ' veani-animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                                        $(this).removeClass();
+                                    });
+                                };
+                                $('#animation').on('change',function(){
+                                    testAnimation($(this).val());
+                                })
+                            })(jQuery);
+                        </script>
                     </div>
                 </div>
 
+                <div class="ve_row ve_ui_section">
+                    <h3>Popup's Background:</h3>
+
+                    <div class="ve_col-sm-12">
+                        <h4><input type="radio" name="background" value="solid" checked="checked" />Solid color background &nbsp;&nbsp;&nbsp; <input type="radio" name="background" value="image" />Image background</h4>
+                    </div>
+                    <div class="solid-color bg-type"> <!-- solid color -->
+                        <div class="ve_col-sm-5">
+
+                            <div class="color-group">
+                                <input type="text" name="background_color" value="<?php echo $post->background_color;?>" class="ve_color-control">
+                            </div>
+                        </div>
+
+                        <div class="ve_col-sm-4">
+
+                            <div>
+                                <input type="number" step="0.1" placeholder="background opacity" name="background_opacity" value="<?php echo $post->background_opacity;?>">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="image-bg bg-type"> <!-- image bg -->
+                        <div class="ve_col-sm-5">
+                            <div class="ve_input_block">
+                                <input type="hidden" class="ve-media-selected-images-ids" name="background_image" value="<?php echo $img_ids;?>"/>
+
+                                <div class="ve-media-selected-images" style="float:left">
+                                    <ul class="ve-media-selected-images-list">
+                                        <?php echo fieldAttachedImages(explode(',',$img_ids));?>
+                                    </ul>
+                                </div>
+                                <a class="ve-media-add-images-btn" style="" href="#" title="Add image">Add image</a>
+                            </div>
+                        </div>
+                        <div class="ve_col-sm-6">
+                            <label>Background style</label>
+                            <div class="ve_background-style" style="margin-top: 20px">
+                                <select name="background_style" class="ve_background-style">
+                                    <?php
+                                    echo getBackgroundStyleOptions($post->background_style);
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
 
                 <?php
                     $close_btn_styles=array(
@@ -146,13 +181,14 @@ $poptions = get_post_meta($post->ID,'_ve_poptions',true);
                         'left'=>'Left',
                     );
                 ?>
-                <h2>Close button:</h2>
-                <div class="ve_row">
+
+                <div class="ve_row ve_ui_section">
+                    <h3>Close button:</h3>
                     <div class="ve_col-sm-4">
                         <label for="popup-close-btn-style">Button Style:</label>
                     </div>
                     <div class="ve_col-sm-6">
-                        <select id="popup-close-btn-style" name="close_btn_style">
+                        <select id="popup-close-btn-style" name="close_btn_style" class="pure-input-1-3">
                             <?php
                             $close_btn_style=$post->close_btn_style;
                             foreach($close_btn_styles as $o_value=>$o_title){
@@ -184,7 +220,7 @@ $poptions = get_post_meta($post->ID,'_ve_poptions',true);
                         <label>Position:</label>
                     </div>
                     <div class="ve_col-sm-4">
-                        <select name="close_btn_position">
+                        <select name="close_btn_position" class="pure-input-1-1">
                             <?php
                                 $close_btn_position=$post->close_btn_position;
                                 if(!$close_btn_position){
@@ -197,22 +233,27 @@ $poptions = get_post_meta($post->ID,'_ve_poptions',true);
                         </select>
                     </div>
                 </div>
-                <p class="small-input">
-                    <strong>Offset:</strong><br/>
+                <div class="row ve_ui_section">
+                    <h3>Offset:</h3>
+                    <p class="small-input">
 
-                    <label for="top">Top:</label>
-                    <input class="" type="text" name="close_btn_top" value="<?php echo esc_attr($post->close_btn_top);?>">
 
-                    <label for="left">Left:</label>
-                    <input type="text" name="close_btn_left" value="<?php echo esc_attr($post->close_btn_left);?>">
+                        <label for="top">Top:</label>
+                        <input class="" type="text" name="close_btn_top" value="<?php echo esc_attr($post->close_btn_top);?>">
 
-                    <label for="bottom">Bottom:</label>
-                    <input type="text" name="close_btn_bottom" value="<?php echo esc_attr($post->close_btn_bottom);?>">
+                        <label for="left">Left:</label>
+                        <input type="text" name="close_btn_left" value="<?php echo esc_attr($post->close_btn_left);?>">
 
-                    <label for="right">Right:</label>
-                    <input type="text" name="close_btn_right" value="<?php echo esc_attr($post->close_btn_right);?>">
-                    <span class="clearfix"></span>
-                </p>
+                        <label for="bottom">Bottom:</label>
+                        <input type="text" name="close_btn_bottom" value="<?php echo esc_attr($post->close_btn_bottom);?>">
+
+                        <label for="right">Right:</label>
+                        <input type="text" name="close_btn_right" value="<?php echo esc_attr($post->close_btn_right);?>">
+                        <span class="clearfix"></span>
+                    </p>
+
+                </div>
+
             </div>
         </div>
 

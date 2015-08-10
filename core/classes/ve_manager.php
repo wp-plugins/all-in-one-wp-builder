@@ -4,7 +4,9 @@ class VE_Manager extends VE_Manager_Abstract{
      * @var VE_Loader
      */
     var $loader;
+    var $factories;
     function __construct($loader){
+        parent::__construct();
         $this->loader=$loader;
     }
     function load(){
@@ -23,6 +25,9 @@ class VE_Manager extends VE_Manager_Abstract{
         $this->set('ShortCode', new VE_ShortCode($this));
         $this->set('Admin', new VE_Admin($this));
         $this->set('ListTable', new VE_List_Table_Manager($this));
+        foreach($this->factories as $name=>$class){
+            $this->_load($class,$name);
+        }
         do_action('ve_load',$this);
     }
     function bootstrap(){
@@ -43,12 +48,38 @@ class VE_Manager extends VE_Manager_Abstract{
         $this->get('Admin')->bootstrap($this);
         $this->get('ListTable')->bootstrap($this);
         //Module bootstrap
+        foreach($this->factories as $name=>$class){
+            $this->_bootstrap($name);
+        }
         do_action('ve_bootstrap',$this);
         //var_dump($this);
+    }
+    function _load($class,$name=''){
+        if(!class_exists($class)){
+            return false;
+        }
+        if(!$name){
+            $name=$class;
+        }
+        $this->set($name,new $class($this));
+    }
+    function _bootstrap($name){
+        if($this->has($name)){
+            $this->get($name)->bootstrap($this);
+        }
+    }
+    function factory($class,$name=''){
+        if(!$name){
+            $name=$class;
+        }
+        $this->factories[$name]=$class;
+        return $this;
     }
     function run($config=array()){
         $this->setConfig($config);
         $this->setMode();
+        //Fire factory action before load and bootstrap
+        do_action('ve_factory',$this);
         $this->load();
         $this->bootstrap();
 
@@ -162,6 +193,13 @@ class VE_Manager extends VE_Manager_Abstract{
      */
     function getListTableManager(){
         return $this->get('ListTable');
+    }
+
+    /**
+     * @return VE_License
+     */
+    function getLicenseManager(){
+        return $this->get('license');
     }
 
 }

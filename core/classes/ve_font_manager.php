@@ -47,7 +47,7 @@ class VE_Font_Manager extends VE_Manager_Abstract{
         $availableFonts=$this->getAvailableFonts();
         ?>
         <div class="wrap">
-        <h2>Ve Fonts</h2>
+        <h2>Fonts</h2>
         <form method="post" action="">
             <input type="hidden" name="ve-action" value="update-fonts"/>
             <p>Select fonts:</p>
